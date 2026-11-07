@@ -4,6 +4,10 @@ import { mkdirSync, writeFileSync, copyFileSync, rmSync, readdirSync } from 'nod
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { SITE, DEVELOPERS, AREAS, PROJECTS, FAQ_GENERAL } from './data.mjs';
+import { DETAILS } from './details.mjs';
+
+// gộp thông tin chi tiết vào từng dự án
+for (const p of PROJECTS) Object.assign(p, DETAILS[p.slug] || {});
 
 const __dir = dirname(fileURLToPath(import.meta.url));
 const OUT = join(__dir, '..', 'site');
@@ -396,6 +400,9 @@ function projectFaq(p) {
     [`Giá bán ${p.name} bao nhiêu?`, `Giá tham khảo: ${p.price}. Giá thay đổi theo vị trí căn, tầng, hướng và đợt mở bán — liên hệ hotline ${SITE.hotline} để nhận bảng giá chính thức.`],
     [`${p.name} có những loại hình sản phẩm nào?`, `Dự án gồm: ${p.types.join(', ')}. Các phân khu: ${p.subzones.join(', ')}.`],
     [`Pháp lý và tiến độ ${p.name} thế nào?`, `Pháp lý: ${p.legal}. Bàn giao: ${p.handover}. Tình trạng: ${p.status}.`],
+    ...(p.specs ? [[`Quy mô ${p.name} gồm bao nhiêu tòa, bao nhiêu căn?`, p.specs.filter(([k]) => /Quy mô|Số căn|Số tòa|Số sản phẩm|Tổng diện tích|Diện tích/.test(k)).map(([k, v]) => `${k}: ${v}`).join('. ') + '.']] : []),
+    ...(p.connect ? [[`Từ ${p.name} di chuyển đến trung tâm mất bao lâu?`, p.connect.map(([k, v]) => `${k}: ${v}`).join('; ') + ' (thời gian tham khảo).']] : []),
+    ...(p.fit ? [[`${p.name} phù hợp với ai?`, `Dự án phù hợp: ${p.fit.join(', ')}.`]] : []),
   ];
 }
 
@@ -421,10 +428,13 @@ function project(p) {
 
 <section class="sec"><div class="wrap detail">
   <article class="detail-main">
-    <nav class="toc reveal" aria-label="Mục lục"><a href="#tong-quan">Tổng quan</a><a href="#noi-bat">Điểm nổi bật</a><a href="#phan-khu">Phân khu</a><a href="#tien-ich">Tiện ích</a><a href="#vi-tri">Vị trí</a><a href="#hoi-dap">Hỏi đáp</a></nav>
+    <nav class="toc reveal" aria-label="Mục lục"><a href="#tong-quan">Tổng quan</a><a href="#thong-so">Thông số</a><a href="#noi-bat">Điểm nổi bật</a><a href="#loai-can">Loại căn & giá</a><a href="#ket-noi">Kết nối</a><a href="#tien-do">Tiến độ</a><a href="#phan-khu">Phân khu</a><a href="#tien-ich">Tiện ích</a><a href="#vi-tri">Vị trí</a><a href="#hoi-dap">Hỏi đáp</a></nav>
     <h2 class="h3" id="tong-quan">Tổng quan dự án ${esc(p.name)}</h2>
-    <p class="lead-p reveal">${esc(p.summary)}</p>
+    ${(p.overview || [p.summary]).map((t, i) => `<p class="${i ? '' : 'lead-p '}reveal">${esc(t)}</p>`).join('')}
     <p class="reveal">Dự án thuộc danh mục của <a href="${R}chu-dau-tu/${p.dev}/">${esc(d.name)}</a> tại <a href="${R}khu-vuc/${p.area}/">${esc(a.name)}</a>. ${esc(a.intro)}</p>
+
+    ${p.specs ? `<h2 class="h3" id="thong-so">Thông số kỹ thuật ${esc(p.name)}</h2>
+    <div class="table-wrap specs reveal"><table class="stable"><caption class="sr">Thông số dự án ${esc(p.name)}</caption><tbody>${p.specs.map(([k, v]) => `<tr><th scope="row">${esc(k)}</th><td>${esc(v)}</td></tr>`).join('')}</tbody></table></div>` : ''}
 
     <h2 class="h3" id="noi-bat">Điểm nổi bật ${esc(p.name)}</h2>
     <ol class="hl">${p.highlights.map((h, i) => `<li class="reveal" style="--d:${i * 70}ms"><span>0${i + 1}</span>${esc(h)}</li>`).join('')}</ol>
@@ -432,15 +442,28 @@ function project(p) {
     <h2 class="h3" id="phan-khu">Mặt bằng & phân khu</h2>
     <div class="pills reveal">${p.subzones.map((s) => `<span>${esc(s)}</span>`).join('')}</div>
 
+    ${p.units ? `<h2 class="h3" id="loai-can">Loại căn, diện tích & giá ${esc(p.name)}</h2>
+    <div class="table-wrap reveal"><table class="ptable utable"><caption class="sr">Loại căn hộ và giá ${esc(p.name)}</caption><thead><tr><th>Loại sản phẩm</th><th>Diện tích</th><th>Giá tham khảo</th></tr></thead><tbody>${p.units.map(([t, s2, pr]) => `<tr><td>${esc(t)}</td><td>${esc(s2)}</td><td class="gold">${esc(pr)}</td></tr>`).join('')}</tbody></table></div>
+    <p class="small muted">* Giá tham khảo tổng hợp từ thị trường/tin rao, có thể thay đổi. Liên hệ để nhận bảng giá chính thức.</p>` : ''}
+
     <h2 class="h3" id="tien-ich">Tiện ích nội khu</h2>
     <ul class="amen">${p.amenities.map((x, i) => `<li class="reveal" style="--d:${i * 50}ms">${esc(x)}</li>`).join('')}</ul>
 
     <h2 class="h3" id="vi-tri">Vị trí ${esc(p.name)}</h2>
     <p class="reveal">Địa chỉ: <strong>${esc(p.address)}</strong>.</p>
+    ${p.connect ? `<ul class="conn" id="ket-noi">${p.connect.map(([k, v], i) => `<li class="reveal" style="--d:${i * 60}ms"><span>${esc(k)}</span><b>${esc(v)}</b></li>`).join('')}</ul>
+    <p class="small muted">* Thời gian di chuyển tham khảo, phụ thuộc giao thông thực tế.</p>` : ''}
     <div class="map reveal"><iframe title="Bản đồ ${esc(p.name)}" loading="lazy" referrerpolicy="no-referrer-when-downgrade" src="https://maps.google.com/maps?q=${encodeURIComponent(p.name + ', ' + p.address)}&z=14&output=embed"></iframe></div>
+
+    ${p.timeline ? `<h2 class="h3" id="tien-do">Tiến độ & các mốc quan trọng</h2>
+    <ol class="tline">${p.timeline.map(([t, e], i) => `<li class="reveal" style="--d:${i * 80}ms"><time>${esc(t)}</time><p>${esc(e)}</p></li>`).join('')}</ol>` : ''}
+
+    ${p.fit ? `<h2 class="h3">${esc(p.name)} phù hợp với ai?</h2>
+    <div class="pills reveal">${p.fit.map((x) => `<span>${esc(x)}</span>`).join('')}</div>` : ''}
 
     <h2 class="h3">Bảng giá & chính sách bán hàng ${esc(p.name)}</h2>
     <p class="reveal">Giá tham khảo: <strong class="gold">${esc(p.price)}</strong>. Chính sách thanh toán, chiết khấu và hỗ trợ vay được cập nhật theo từng đợt mở bán của ${esc(d.name)}. <a href="#dang-ky">Đăng ký nhận bảng giá chi tiết</a>.</p>
+    ${p.sources ? `<div class="srcs reveal"><h3>Nguồn tham khảo</h3><ul>${p.sources.map(([t, u]) => `<li><a href="${esc(u)}" target="_blank" rel="noopener nofollow">${esc(t)}</a></li>`).join('')}</ul><p class="small muted">Thông tin tổng hợp từ báo chí & nguồn công khai, cập nhật ${yearsAgo}. Vui lòng đối chiếu hồ sơ pháp lý chính thức của chủ đầu tư.</p></div>` : ''}
     <p class="tags">${p.keywords.map((k) => `<span>#${esc(k)}</span>`).join('')}</p>
   </article>
   <aside class="detail-side">

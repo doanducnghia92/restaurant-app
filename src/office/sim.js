@@ -2,10 +2,10 @@
 // trao đổi, họp...). "Engine" điều phối dự án đi qua các phòng ban và sinh các
 // sự kiện ngẫu nhiên (nghỉ cà phê, hỏi đồng nghiệp, HR thăm hỏi, họp giao ban).
 import {
-  ZONES, buildRoster, doorPoint, corridorPoint, visitorSpot, MEETING_SEATS, PANTRY_SPOTS, STUDIO_SPOTS,
+  ZONES, buildRoster, doorPoint, corridorPoint, visitorSpot, MEETING_SEATS, PANTRY_SPOTS,
 } from "./layout.js";
 import {
-  TALKS, LIVE_LINES, LIVE_HELPER, COFFEE_LINES, COFFEE_CHAT, WORK_THOUGHTS, MEETING_REPORT, PROJECT_NAMES, CLIENTS, pick, fill,
+  TALKS, COFFEE_LINES, COFFEE_CHAT, WORK_THOUGHTS, MEETING_REPORT, PROJECT_NAMES, CLIENTS, pick, fill,
 } from "./dialogues.js";
 
 const WALK_SPEED = 2.1; // m/giây mô phỏng
@@ -36,9 +36,7 @@ const PIPELINE = [
   { kind: "work", dept: "tech", dur: 26, label: "Lập trình {p}", stage: "Phát triển" },
   { kind: "talk", from: "tech", to: "mkt", key: "tech>mkt", stage: "Bàn giao Marketing" },
   { kind: "work", dept: "mkt", dur: 16, label: "Truyền thông {p}", stage: "Truyền thông" },
-  { kind: "talk", from: "mkt", to: "aff", key: "mkt>aff", stage: "Bàn giao Affiliate" },
-  { kind: "work", dept: "aff", dur: 14, label: "Chạy affiliate {p}", stage: "Bán qua KOC", orders: true },
-  { kind: "talk", from: "aff", to: "sales", key: "aff>sales", stage: "Báo số đơn" },
+  { kind: "talk", from: "mkt", to: "sales", key: "mkt>sales", stage: "Gửi tài liệu" },
   { kind: "work", dept: "sales", dur: 10, label: "Chốt hợp đồng {c}", stage: "Chốt hợp đồng" },
   { kind: "talk", from: "sales", to: "fin", key: "sales>fin", stage: "Chuyển kế toán" },
   { kind: "work", dept: "fin", dur: 8, label: "Xuất hoá đơn {p}", stage: "Thanh toán" },
@@ -62,9 +60,8 @@ export class OfficeSim {
     this.revenue = 0;
     this.meeting = null;
     this.pantryUsed = new Set();
-    this.timers = { project: 2, coffee: 9, peer: 5, hr: 16, ceo: 26, meeting: 75, pair: 30, live: 20 };
-    this.affOrders = 0;
-    this.live = null;
+    this.timers = { project: 2, coffee: 9, peer: 5, hr: 16, ceo: 26, meeting: 75, pair: 30 };
+    this.aiPending = []; // các lượt bàn giao thật giữa agent AI đang chờ thực hiện
 
     this.agents = buildRoster().map((r, i) => ({
       ...r,
@@ -84,7 +81,9 @@ export class OfficeSim {
       bubble: null,
       bubbleUntil: 0,
       nextThought: rand(2, 12),
-      status: "Đang làm việc",
+      status: r.real ? "Chờ việc" : "Đang làm việc",
+      aiTask: null,
+      stayAway: false,
       task: null,
       progress: null,
       cup: false,
@@ -124,8 +123,9 @@ export class OfficeSim {
     return this.agents.filter((a) => a.dept === dept);
   }
 
-  available(a) {
-    return a && !a.locked && !a.cur && a.queue.length === 0 && a.at === "home";
+  // Agent AI thật (phòng Affiliate) không bị kịch bản ngẫu nhiên điều đi đâu cả
+  available(a, allowReal = false) {
+    return a && (allowReal || !a.real) && !a.locked && !a.cur && a.queue.length === 0 && a.at === "home";
   }
 
   freeIn(dept, exclude) {
@@ -145,6 +145,7 @@ export class OfficeSim {
     }
     for (const a of this.agents) this.stepAgent(a, dt);
     this.engine();
+    this.stepAi();
     this.stepMeeting(dt);
   }
 
@@ -161,6 +162,10 @@ export class OfficeSim {
         a.cur = null;
         this.touch();
       }
+      return;
+    }
+    if (a.real) {
+      this.idleReal(a);
       return;
     }
     // Không có việc gì: về bàn hoặc làm việc tại chỗ
@@ -272,7 +277,7 @@ export class OfficeSim {
         a.pose = s.sit ? "sit" : "stand";
         a.leaveVia = [...s.via].reverse();
         a.at = act.home ? "home" : "away";
-        if (act.home) a.status = "Đang làm việc";
+        if (act.home) a.status = a.real ? a.aiTask || "Chờ việc" : "Đang làm việc";
         return true;
       }
       case "wait":
@@ -313,12 +318,12 @@ export class OfficeSim {
           return true;
         }
         const [who, raw] = act.lines[act.idx];
-        const text = fill(raw, act.ctx);
+        const text = act.raw ? raw : fill(raw, act.ctx);
         const speaker = who === 0 ? a : b;
         const listener = who === 0 ? b : a;
         const dur = lineDur(text);
-        this.say(speaker, text, dur + 0.2);
-        this.log(speaker, text, "talk", listener);
+        this.say(speaker, text.length > 110 ? `${text.slice(0, 108)}…` : text, dur + 0.2);
+        this.log(speaker, text, act.raw ? "ai" : "talk", listener);
         act.left = dur;
         return false;
       }
@@ -330,12 +335,12 @@ export class OfficeSim {
   }
 
   // ---------- điều phối ----------
-  visit(a, b, lines, ctx, onDone, why) {
+  visit(a, b, lines, ctx, onDone, why, raw = false) {
     b.locked = true;
     const full = { A: a.name, B: b.name, ...ctx };
     a.queue.push(
       { t: "go", spot: visitorSpot(b.seat), status: why || `Đi gặp ${b.name}` },
-      { t: "talk", partner: b, lines, ctx: full, onDone },
+      { t: "talk", partner: b, lines, ctx: full, onDone, raw },
     );
     this.touch();
   }
@@ -371,9 +376,6 @@ export class OfficeSim {
       const target = shuffle(this.agents.filter((x) => x.dept !== "ceo" && this.available(x)))[0];
       if (ceo && target) this.visit(ceo, target, pick(TALKS.ceo), {}, null, `Đi một vòng, ghé ${target.name}`);
       T.ceo = this.t + rand(35, 55);
-    }
-    if (this.t > T.live) {
-      T.live = this.t + (this.startLive() ? rand(70, 110) : 15);
     }
     if (this.t > T.meeting) {
       T.meeting = this.t + (this.startMeeting() ? rand(110, 160) : 20);
@@ -419,15 +421,7 @@ export class OfficeSim {
       if (!a) return;
       p.busy = true;
       p.who[s.dept] = a;
-      const done = s.orders
-        ? () => {
-          const n = Math.round(rand(80, 400));
-          this.affOrders += n;
-          this.log(a, `🛒 Chiến dịch affiliate "${p.name}" ra ${n} đơn qua link KOC!`, "system");
-          advance();
-        }
-        : advance;
-      a.queue.push({ t: "work", dur: s.dur * rand(0.85, 1.2), label: fill(s.label, ctx), onDone: done });
+      a.queue.push({ t: "work", dur: s.dur * rand(0.85, 1.2), label: fill(s.label, ctx), onDone: advance });
     } else {
       const a = this.pickFor(p, s.from);
       if (!a) return;
@@ -501,7 +495,7 @@ export class OfficeSim {
   }
 
   peerChat(agent) {
-    const depts = agent ? [agent.dept] : shuffle(["tech", "mkt", "aff", "sales", "fin", "hr"]);
+    const depts = agent ? [agent.dept] : shuffle(["tech", "mkt", "sales", "fin", "hr"]);
     for (const d of depts) {
       const a = agent ?? this.freeIn(d)[0];
       const b = this.freeIn(d, a)[0];
@@ -525,7 +519,7 @@ export class OfficeSim {
     if (this.meeting) return false;
     const ceo = this.inDept("ceo")[0];
     if (!this.available(ceo)) return false;
-    const others = ["tech", "mkt", "aff", "sales", "fin", "hr"].map((d) => this.freeIn(d)[0]).filter(Boolean);
+    const others = ["tech", "mkt", "sales", "fin", "hr"].map((d) => this.freeIn(d)[0]).filter(Boolean);
     if (others.length < 2) return false;
     const people = [ceo, ...others].slice(0, MEETING_SEATS.length);
     const m = { people, arrived: new Set(), state: "gather", wait: 0, idx: -1, left: 0, lines: [], done: false };
@@ -549,7 +543,6 @@ export class OfficeSim {
         n: this.projects.filter((p) => !p.finished).length,
         d: this.done,
         r: fmtMoney(this.revenue),
-        k: this.affOrders,
       };
       const [ceo, ...rest] = m.people;
       m.lines = [
@@ -576,52 +569,80 @@ export class OfficeSim {
     }
   }
 
-  // Livestream bán hàng ở Studio: 1 host (Affiliate) + 1 trợ lý
-  startLive() {
-    if (this.live) return false;
-    const host = this.freeIn("aff")[0];
-    if (!host) return false;
-    const helper = this.freeIn("aff", host)[0] ?? this.freeIn("mkt")[0];
-    const c = pick(CLIENTS);
-    const live = { done: false };
-    this.live = live;
-    const lines = LIVE_LINES.map((l) => fill(l, { c }));
-    host.queue.push(
-      { t: "go", spot: STUDIO_SPOTS[0], status: "Livestream bán hàng 🔴" },
-      { t: "call", fn: () => this.log(host, `🔴 ${host.name} lên sóng livestream bán hàng cho ${c}!`, "system") },
-      ...lines.map((text) => ({ t: "say", text, dur: lineDur(text) + 0.6, log: "live" })),
-      {
-        t: "call",
-        fn: () => {
-          const n = Math.round(rand(150, 600));
-          this.affOrders += n;
-          this.log(host, `🛒 Livestream kết thúc: chốt ${n} đơn cho ${c}!`, "system");
-          live.done = true;
-          this.live = null;
-        },
-      },
-    );
-    if (helper) {
-      helper.queue.push(
-        { t: "go", spot: STUDIO_SPOTS[1], status: `Hỗ trợ live cùng ${host.name}` },
-        { t: "wait", dur: 4 },
-        { t: "say", text: pick(LIVE_HELPER), dur: 3 },
-        { t: "wait", dur: 5 },
-        { t: "say", text: pick(LIVE_HELPER), dur: 3 },
-        { t: "hold", until: () => live.done },
-      );
+  // ---------- agent AI thật ----------
+  // Lớp AI (src/office/ai) gọi các hàm dưới đây để nhân vật 3D phản ánh công việc thật.
+  idleReal(a) {
+    if (a.inTalk) return;
+    if (a.at !== "home" && !a.locked && !a.stayAway) {
+      a.queue.push({ t: "go", spot: a.seat, home: true, status: "Về chỗ ngồi" });
+      return;
     }
+    a.pose = a.at === "home" ? "sit" : "stand";
+    a.typing = !!a.aiTask;
+    if (a.at === "home") a.targetRot = a.seat.rot;
+    if (!a.locked) a.status = a.aiTask || "Chờ việc";
+    a.progress = a.aiTask ? a.aiProgress ?? null : null;
+    if (!a.aiTask && this.t > a.nextThought) {
+      this.say(a, pick(["💤", "☕?", "Có brief mới chưa nhỉ? 👀", "🎧"]), 2.2);
+      a.nextThought = this.t + rand(25, 50);
+    }
+  }
+
+  aiSetTask(id, label, progress = null) {
+    const a = this.byId[id];
+    a.aiTask = label;
+    a.aiProgress = progress;
     this.touch();
-    return true;
+  }
+
+  aiBubble(id, text, dur = 3) {
+    this.say(this.byId[id], text, dur);
+  }
+
+  aiLog(id, text, toId = null) {
+    this.log(this.byId[id], text, "ai", toId ? this.byId[toId] : null);
+  }
+
+  // Bàn giao thật: A đi tới bàn B, nói tóm tắt kết quả, B xác nhận. Resolve khi nói xong.
+  aiHandoff(fromId, toId, lines) {
+    return new Promise((resolve) => {
+      this.aiPending.push({ a: this.byId[fromId], b: this.byId[toId], lines, resolve });
+    });
+  }
+
+  aiGo(id, spot, status) {
+    const a = this.byId[id];
+    a.stayAway = true;
+    return new Promise((resolve) => {
+      a.queue.push({ t: "go", spot, status }, { t: "call", fn: resolve });
+      this.touch();
+    });
+  }
+
+  aiHome(id) {
+    const a = this.byId[id];
+    a.stayAway = false;
+    if (a.at === "home" && !a.cur && !a.queue.length) return Promise.resolve();
+    return new Promise((resolve) => {
+      a.queue.push({ t: "go", spot: a.seat, home: true, status: "Về chỗ ngồi" }, { t: "call", fn: resolve });
+      this.touch();
+    });
+  }
+
+  stepAi() {
+    if (!this.aiPending.length) return;
+    this.aiPending = this.aiPending.filter((h) => {
+      const { a, b } = h;
+      const aFree = !a.locked && !a.cur && !a.queue.length && !a.inTalk;
+      const bFree = !b.locked && !b.cur && !b.queue.length && !b.inTalk && b.at === "home";
+      if (!aFree || !bFree) return true;
+      a.stayAway = false;
+      this.visit(a, b, h.lines, {}, h.resolve, `Bàn giao cho ${b.name}`, true);
+      return false;
+    });
   }
 
   // ---------- lệnh từ người dùng ----------
-  cmdLive() {
-    const ok = this.startLive();
-    if (ok) this.timers.live = this.t + rand(70, 110);
-    return ok;
-  }
-
   cmdCoffee(id) {
     const a = this.byId[id];
     if (!this.available(a)) return false;

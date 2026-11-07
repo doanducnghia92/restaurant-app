@@ -6,6 +6,8 @@ import { OfficeSim, fmtClock, fmtMoney, projectStage, PIPELINE_LEN } from "./sim
 import { Office } from "./Scene";
 import Agent from "./Agent";
 import { ZONES, ZONE_LIST, FLOOR_W, FLOOR_D } from "./layout";
+import { AffiliateStudio, STEPS } from "./ai/affiliate";
+import AiPanel, { AiMini } from "./AiPanel";
 import "./office.css";
 
 // Trạng thái camera dùng chung giữa UI và vòng render
@@ -123,7 +125,7 @@ function ChatLog({ sim, onPick }) {
                 <b style={{ color: ZONES[l.dept].accent }}>{l.from}</b>
                 {l.to && <span className="to"> → {l.to}</span>}
                 {l.kind === "meeting" && <span className="to"> · 📋 họp</span>}
-                {l.kind === "live" && <span className="to"> · 🔴 live</span>}
+                {l.kind === "ai" && <span className="ai-tag">🤖 AI thật</span>}
                 <span className="time">{l.clock}</span>
               </div>
               <div className="log-text">{l.text}</div>
@@ -145,7 +147,7 @@ function Staff({ sim, onPick, selected }) {
             <button key={a.id} className={`staff ${selected === a.id ? "on" : ""}`} onClick={() => onPick(a.id)}>
               <Avatar agent={a} />
               <span className="staff-info">
-                <b>{a.name}</b> <small>{a.role}</small>
+                <b>{a.name}</b> <small>{a.role}</small>{a.real && <span className="ai-tag">🤖 AI</span>}
                 <span className="status">{a.status}</span>
               </span>
               {a.progress != null && <span className="mini-prog"><i style={{ width: `${a.progress * 100}%`, background: z.accent }} /></span>}
@@ -176,7 +178,7 @@ function Projects({ sim }) {
   );
 }
 
-function AgentCard({ sim, agent, following, onFollow, onClose, toast }) {
+function AgentCard({ sim, agent, following, onFollow, onClose, toast, onOpenAi }) {
   const z = ZONES[agent.dept];
   const free = sim.available(agent);
   return (
@@ -193,11 +195,16 @@ function AgentCard({ sim, agent, following, onFollow, onClose, toast }) {
       {agent.progress != null && (
         <div className="bar"><i style={{ width: `${agent.progress * 100}%`, background: z.accent }} /></div>
       )}
-      <div className="card-stats">💬 {agent.stats.talks} lần trao đổi · ✅ {agent.stats.tasks} việc xong</div>
+      <div className="card-stats">
+        {agent.real ? "🤖 Agent AI thật (Claude) — làm việc theo brief anh giao" : `💬 ${agent.stats.talks} lần trao đổi · ✅ ${agent.stats.tasks} việc xong`}
+      </div>
       <div className="card-actions">
         <button onClick={onFollow} className={following ? "on" : ""}>{following ? "🎥 Đang theo" : "🎥 Theo dõi"}</button>
+        {agent.real && <button onClick={onOpenAi}>🤖 Giao việc</button>}
+        {!agent.real && <>
         <button disabled={!free} onClick={() => toast(sim.cmdCoffee(agent.id) ? `☕ ${agent.name} đi nghỉ giải lao` : "Pantry đang kín chỗ!")}>☕ Cho nghỉ</button>
         <button disabled={!free} onClick={() => toast(sim.cmdChat(agent.id) ? `💬 ${agent.name} đi trao đổi` : "Không ai rảnh lúc này")}>💬 Trao đổi</button>
+        </>}
       </div>
     </div>
   );
@@ -213,6 +220,11 @@ export default function OfficeApp() {
   const [touchMode, setTouchMode] = useState("pan");
   const [msg, setMsg] = useState(null);
   const [, force] = useState(0);
+  const [aiView, setAiView] = useState("closed"); // closed | open | mini
+  const studio = useMemo(() => new AffiliateStudio(sim), [sim]);
+  useEffect(() => {
+    studio.init();
+  }, [studio]);
   useTick(400);
 
   const portrait = typeof window !== "undefined" && window.innerHeight > window.innerWidth;
@@ -233,6 +245,13 @@ export default function OfficeApp() {
     view.followDist = 12;
     view.fly = null;
   }, []);
+
+  // Thu nhỏ bảng AI và cho camera theo agent đang xử lý job
+  const watchJob = (job) => {
+    setAiView("mini");
+    const role = STEPS.find((s) => s.key === job?.step)?.role || "script";
+    pick(studio.agents[role].id);
+  };
 
   const closeCard = () => {
     setSelected(null);
@@ -292,7 +311,7 @@ export default function OfficeApp() {
       <header className="topbar">
         <div className="brand">🏢 <span>Văn phòng Agent</span></div>
         <div className="clock">Ngày {sim.day} · {fmtClock(sim.clock)}</div>
-        <div className="kpi">📁 {activeProjects} · ✅ {sim.done} · 💰 {fmtMoney(sim.revenue)} · 🛒 {sim.affOrders.toLocaleString("vi-VN")} đơn</div>
+        <div className="kpi">📁 {activeProjects} · ✅ {sim.done} · 💰 {fmtMoney(sim.revenue)} · 🎬 {studio.list().filter((j) => j.status === "ready" || j.status === "posted").length} video AI</div>
         <div className="speed">
           <button className={sim.paused ? "on" : ""} onClick={() => setSpeed(0)} aria-label="Tạm dừng">{sim.paused ? "▶" : "❚❚"}</button>
           {[1, 2, 4].map((s) => (
@@ -312,11 +331,16 @@ export default function OfficeApp() {
       <div className="fabs">
         <button onClick={() => { sim.cmdProject(); toast("📩 Có khách hàng mới gửi yêu cầu!"); }} title="Dự án mới">📩<small>Dự án</small></button>
         <button onClick={() => toast(sim.cmdMeeting() ? "📣 Sếp triệu tập họp!" : "Chưa họp được (sếp bận / đang họp)")} title="Họp">📣<small>Họp</small></button>
-        <button onClick={() => toast(sim.cmdLive() ? "🔴 Team Affiliate lên sóng livestream!" : "Studio đang live hoặc team Affiliate đang bận")} title="Livestream">🔴<small>Live</small></button>
+        <button className="fab-ai" onClick={() => setAiView("open")} title="Phòng Affiliate AI">🤖<small>AI</small></button>
         <button onClick={() => { setTouchMode((m) => (m === "pan" ? "rotate" : "pan")); toast(touchMode === "pan" ? "1 ngón: xoay camera" : "1 ngón: kéo bản đồ"); }} title="Chế độ chạm">
           {touchMode === "pan" ? "✋" : "🔄"}<small>{touchMode === "pan" ? "Kéo" : "Xoay"}</small>
         </button>
       </div>
+
+      {aiView === "open" && (
+        <AiPanel studio={studio} toast={toast} onClose={() => setAiView("closed")} onMinimize={() => setAiView("mini")} onWatch={watchJob} />
+      )}
+      {aiView === "mini" && <AiMini studio={studio} onOpen={() => setAiView("open")} />}
 
       {msg && <div className="toast">{msg}</div>}
 
@@ -329,6 +353,7 @@ export default function OfficeApp() {
             following={following === agent.id}
             onClose={closeCard}
             toast={toast}
+            onOpenAi={() => setAiView("open")}
             onFollow={() => {
               if (following === agent.id) {
                 setFollowing(null);

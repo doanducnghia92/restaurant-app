@@ -3,7 +3,7 @@ import { Billboard } from "@react-three/drei";
 import * as THREE from "three";
 import { mat, geo } from "./materials";
 import {
-  ZONE_LIST, ZONE_W, ZONE_D, CORRIDOR, FLOOR_W, FLOOR_D, ZONES, MEETING_TABLE, MEETING_SEATS, PANTRY,
+  ZONE_LIST, ZONE_W, ZONE_D, CORRIDOR, FLOOR_W, FLOOR_D, ZONES, MEETING_TABLE, MEETING_SEATS, PANTRY, STUDIO, COLS,
 } from "./layout";
 
 function Box({ p, s, c, r, cast = true, opts }) {
@@ -40,7 +40,7 @@ export function Chair({ x, z, rot, color = "#7c86a8" }) {
   );
 }
 
-const SCREEN = { tech: "#8fd3ff", mkt: "#ffb3d1", sales: "#ffd59a", fin: "#a8f0c2", ceo: "#cbb8ff", hr: "#fff0a0" };
+const SCREEN = { aff: "#9ff0e2", tech: "#8fd3ff", mkt: "#ffb3d1", sales: "#ffd59a", fin: "#a8f0c2", ceo: "#cbb8ff", hr: "#fff0a0" };
 
 function Desk({ seat, dept }) {
   // nhóm bàn quay theo hướng nhân viên ngồi (local +z = phía trước mặt nhân viên)
@@ -130,7 +130,7 @@ function ZoneShell({ zone }) {
 function SideWalls() {
   // vách ngăn giữa các phòng + tường ngoài hai đầu
   const walls = [];
-  const xs = [-FLOOR_W / 2, -FLOOR_W / 4, 0, FLOOR_W / 4, FLOOR_W / 2];
+  const xs = [...COLS.map((x) => x - ZONE_W / 2), FLOOR_W / 2];
   xs.forEach((x, i) => {
     const h = i === 0 || i === xs.length - 1 ? 1.5 : 1.1;
     walls.push(<Wall key={`t${i}`} x={x} z={-(CORRIDOR + ZONE_D / 2)} w={0.16} d={ZONE_D} h={h} />);
@@ -192,6 +192,63 @@ function Pantry() {
         <Box p={[0, 0.5, 1.15]} s={[1.0, 0.35, 0.2]} c="#ff9e70" />
       </group>
       <Plant x={s.x - 0.1} z={s.z + 2.1} big />
+    </group>
+  );
+}
+
+function Studio() {
+  const b = STUDIO.backdrop;
+  const t = STUDIO.table;
+  const c = STUDIO.camera;
+  return (
+    <group>
+      {/* phông nền + biển ON AIR */}
+      <Box p={[b.x, 1.2, b.z]} s={[4.2, 2.4, 0.1]} c="#ffb3bd" />
+      <Box p={[b.x, 1.2, b.z - 0.06]} s={[3.6, 1.8, 0.02]} c="#ffd6dc" cast={false} />
+      <Box p={[b.x, 2.15, b.z - 0.1]} s={[1.1, 0.3, 0.06]} c="#e5484d" opts={{ emissive: "#ff2d3b", emissiveIntensity: 0.9 }} />
+      {/* bàn sản phẩm */}
+      <Box p={[t.x, 0.42, t.z]} s={[2.4, 0.84, 0.7]} c="#ffffff" />
+      <Box p={[t.x - 0.8, 0.98, t.z]} s={[0.35, 0.28, 0.3]} c="#f2a03d" />
+      <Box p={[t.x - 0.3, 0.95, t.z]} s={[0.25, 0.22, 0.25]} c="#12a594" />
+      <Cyl p={[t.x + 0.3, 1.0, t.z]} s={[0.09, 0.32, 0.09]} c="#ef6fa3" />
+      <Cyl p={[t.x + 0.55, 0.96, t.z]} s={[0.08, 0.24, 0.08]} c="#8a6cf0" />
+      <Box p={[t.x + 0.9, 0.97, t.z]} s={[0.3, 0.26, 0.3]} c="#5b8def" />
+      {/* vòng đèn + điện thoại quay */}
+      <group position={[c.x, 0, c.z]}>
+        <Cyl p={[0, 0.75, 0]} s={[0.03, 1.5, 0.03]} c="#3b3f52" />
+        <Cyl p={[0, 0.02, 0]} s={[0.3, 0.04, 0.3]} c="#3b3f52" />
+        <mesh position={[0, 1.6, 0]}>
+          <torusGeometry args={[0.32, 0.05, 10, 32]} />
+          <meshStandardMaterial color="#ffffff" emissive="#fff4d6" emissiveIntensity={1.2} />
+        </mesh>
+        <Box p={[0, 1.6, 0]} s={[0.12, 0.22, 0.02]} c="#2d3142" />
+      </group>
+      {/* ghế trợ lý + cây */}
+      <Plant x={b.x - 3.6} z={b.z + 0.1} />
+      <Plant x={b.x + 3.6} z={b.z + 0.1} big />
+    </group>
+  );
+}
+
+function AffiliateCorner() {
+  const z = ZONES.aff;
+  return (
+    <group>
+      {/* màn hình bảng xếp hạng KOC */}
+      <Box p={[z.x + 4.1, 1.1, z.z + 1.5]} s={[0.08, 1.0, 1.7]} c="#2d3142" />
+      <mesh position={[z.x + 4.05, 1.1, z.z + 1.5]} rotation={[0, -Math.PI / 2, 0]}>
+        <planeGeometry args={[1.55, 0.85]} />
+        <meshBasicMaterial color="#9ff0e2" toneMapped={false} />
+      </mesh>
+      {/* kệ hàng mẫu */}
+      <group position={[z.x - 3.9, 0, z.z + 1.6]}>
+        <Box p={[0, 0.7, 0]} s={[0.5, 1.4, 1.4]} c="#d9f5f0" />
+        <Box p={[0, 0.5, -0.35]} s={[0.35, 0.25, 0.35]} c="#f2a03d" cast={false} />
+        <Box p={[0, 0.5, 0.25]} s={[0.35, 0.3, 0.4]} c="#ef6fa3" cast={false} />
+        <Box p={[0, 1.0, -0.2]} s={[0.35, 0.25, 0.5]} c="#5b8def" cast={false} />
+        <Box p={[0, 1.0, 0.35]} s={[0.35, 0.2, 0.3]} c="#12a594" cast={false} />
+      </group>
+      <Plant x={z.x + ZONE_W / 2 - 0.6} z={z.z - ZONE_D / 2 + 0.6} />
     </group>
   );
 }
@@ -275,6 +332,8 @@ export const Office = memo(function Office({ desks }) {
       <MeetingRoom />
       <Pantry />
       <CeoRoom />
+      <Studio />
+      <AffiliateCorner />
       <Decorations />
     </group>
   );

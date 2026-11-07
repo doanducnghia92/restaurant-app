@@ -22,6 +22,14 @@ export const TALKS = {
     [[0, "{B} ơi, bản demo {p} chạy ngon rồi 🚀"], [1, "Tuyệt! Gửi mình vài screenshot nhé"], [0, "Gửi qua Slack rồi đó"], [1, "Để mình làm poster và kế hoạch truyền thông 🎨"]],
     [[0, "{p} đã lên môi trường staging rồi nha"], [1, "Ui nhanh thế! Có tính năng nào nổi bật?"], [0, "Tốc độ load dưới 1 giây ⚡"], [1, "Đó sẽ là thông điệp chính của chiến dịch!"]],
   ],
+  "mkt>aff": [
+    [[0, "{B} ơi, bộ ảnh và video {p} xong rồi nè 🎬"], [1, "Ngon! Mình gửi ngay cho dàn KOC review"], [0, "Có mã giảm giá riêng cho affiliate chưa?"], [1, "Có rồi, mã AFF20 giảm 20% 🔗"]],
+    [[0, "Chiến dịch {p} cần thêm kênh bán, giúp mình với"], [1, "Để mình tuyển 30 KOC TikTok cho {c}"], [0, "Hoa hồng bao nhiêu thì hợp lý?"], [1, "12% là các bạn ấy nhiệt tình lắm 😎"]],
+  ],
+  "aff>sales": [
+    [[0, "{B} ơi, link affiliate {p} ra 340 đơn rồi! 🛒"], [1, "Trời, khách {c} sẽ vui lắm đây"], [0, "Gửi khách số liệu để chốt hợp đồng dài hạn nhé"], [1, "Ok, mình hẹn khách ký luôn 🤝"]],
+    [[0, "Buổi livestream {p} tối qua chốt 500 đơn 🔥"], [1, "Đỉnh quá! Doanh thu bao nhiêu?"], [0, "Đủ để khách gia hạn hợp đồng {a} đó"], [1, "Để mình chốt deal ngay!"]],
+  ],
   "mkt>sales": [
     [[0, "Bộ tài liệu giới thiệu {p} xong rồi 📑"], [1, "Đẹp quá! Mình gửi khách {c} ngay"], [0, "Có cả video demo 30 giây nữa nhé"], [1, "Chắc chắn chốt được hợp đồng 😎"]],
     [[0, "{B} ơi, landing page {p} đã live!"], [1, "Tuyệt, khách đang chờ xem đó"], [0, "Mình đã chạy thử A/B test, tỉ lệ chuyển đổi tốt"], [1, "Để mình hẹn khách ký hợp đồng 🤝"]],
@@ -51,6 +59,11 @@ export const TALKS = {
     [[0, "Báo cáo thuế quý này nộp chưa?"], [1, "Mai mình nộp nhé, đang soát lại số liệu"], [0, "Ok, cần gì cứ hỏi mình 📊"]],
     [[0, "Chi phí văn phòng phẩm tháng này tăng nha"], [1, "Do pantry mua thêm bánh đó 😆"], [0, "Thôi khoản đó chấp nhận được 🍪"]],
   ],
+  "peer:aff": [
+    [[0, "Link tracking của KOC Bông bị lỗi rồi 😱"], [1, "Mình vừa tạo lại link mới, gửi bạn ấy nhé"], [0, "Cứu tinh! 🙏"]],
+    [[0, "Tháng này top KOC kiếm được 50 triệu hoa hồng đó"], [1, "Thưởng thêm cho bạn ấy đi, giữ chân top đầu"], [0, "Chuẩn, mình đề xuất luôn 💸"]],
+    [[0, "Tối nay ai lên live bán {c} vậy?"], [1, "Ngọc nhé, kịch bản xong rồi 🎥"], [0, "Nhớ mời thêm mini game nha 🎁"]],
+  ],
   "peer:hr": [
     [[0, "Tuần sau có 3 ứng viên phỏng vấn"], [1, "Mình xếp lịch với các trưởng phòng nhé"], [0, "Cảm ơn bạn 🙌"]],
   ],
@@ -78,6 +91,7 @@ export const WORK_THOUGHTS = {
   sales: ["📞 Alo anh ơi...", "📧 gửi báo giá", "🤝", "🗓️ hẹn khách"],
   fin: ["📊", "🧮 tính toán...", "🧾", "💵"],
   ceo: ["📋", "🤔 chiến lược...", "📈", "☎️"],
+  aff: ["🔗 tạo link...", "📱 duyệt KOC...", "📈 xem đơn", "💸 tính hoa hồng"],
   hr: ["📝 lọc CV...", "👥", "📅", "💌"],
 };
 
@@ -87,9 +101,19 @@ export const MEETING_REPORT = {
   mkt: ["Marketing: lượt tiếp cận tăng 20% 📈", "Chiến dịch mới sẽ ra mắt thứ Hai 🎨"],
   sales: ["Kinh doanh: đã chốt {d} hợp đồng 🤝", "Có thêm 5 khách hàng tiềm năng!"],
   fin: ["Kế toán: doanh thu đạt {r} 💰", "Chi phí trong tầm kiểm soát 📊"],
+  aff: ["Affiliate: {k} đơn qua link đối tác 🔗", "Có thêm 25 KOC mới tham gia chương trình 📱"],
   hr: ["Nhân sự: tuần sau đón 2 bạn mới 🎉", "Team building tháng này đi biển nhé 🏖️"],
   end: ["Tốt lắm, cố gắng nhé! Tan họp 👍", "Cảm ơn mọi người, quay lại làm việc thôi! 🚀"],
 };
+
+export const LIVE_LINES = [
+  "🔴 Chào cả nhà, mình lên live rồi đây!",
+  "Sản phẩm của {c} hot lắm nha 🔥",
+  "Mã AFF20 giảm 20%, nhanh tay nào!",
+  "Chốt đơn! Chốt đơn! 🛒",
+  "Cảm ơn cả nhà đã ủng hộ 💖",
+];
+export const LIVE_HELPER = ["📦 Lên đơn liên tục!", "💬 Bình luận nhiều quá!", "🎁 Mini game nè!"];
 
 export function fill(text, ctx) {
   return text.replace(/\{(\w)\}/g, (_, k) => (ctx[k] ?? ""));

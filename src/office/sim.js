@@ -2,10 +2,10 @@
 // trao đổi, họp...). "Engine" điều phối dự án đi qua các phòng ban và sinh các
 // sự kiện ngẫu nhiên (nghỉ cà phê, hỏi đồng nghiệp, HR thăm hỏi, họp giao ban).
 import {
-  ZONES, buildRoster, doorPoint, corridorPoint, visitorSpot, MEETING_SEATS, PANTRY_SPOTS,
+  ZONES, buildRoster, doorPoint, corridorPoint, visitorSpot, MEETING_SEATS, PANTRY_SPOTS, STUDIO_SPOTS,
 } from "./layout.js";
 import {
-  TALKS, COFFEE_LINES, COFFEE_CHAT, WORK_THOUGHTS, MEETING_REPORT, PROJECT_NAMES, CLIENTS, pick, fill,
+  TALKS, LIVE_LINES, LIVE_HELPER, COFFEE_LINES, COFFEE_CHAT, WORK_THOUGHTS, MEETING_REPORT, PROJECT_NAMES, CLIENTS, pick, fill,
 } from "./dialogues.js";
 
 const WALK_SPEED = 2.1; // m/giây mô phỏng
@@ -36,7 +36,9 @@ const PIPELINE = [
   { kind: "work", dept: "tech", dur: 26, label: "Lập trình {p}", stage: "Phát triển" },
   { kind: "talk", from: "tech", to: "mkt", key: "tech>mkt", stage: "Bàn giao Marketing" },
   { kind: "work", dept: "mkt", dur: 16, label: "Truyền thông {p}", stage: "Truyền thông" },
-  { kind: "talk", from: "mkt", to: "sales", key: "mkt>sales", stage: "Gửi tài liệu" },
+  { kind: "talk", from: "mkt", to: "aff", key: "mkt>aff", stage: "Bàn giao Affiliate" },
+  { kind: "work", dept: "aff", dur: 14, label: "Chạy affiliate {p}", stage: "Bán qua KOC", orders: true },
+  { kind: "talk", from: "aff", to: "sales", key: "aff>sales", stage: "Báo số đơn" },
   { kind: "work", dept: "sales", dur: 10, label: "Chốt hợp đồng {c}", stage: "Chốt hợp đồng" },
   { kind: "talk", from: "sales", to: "fin", key: "sales>fin", stage: "Chuyển kế toán" },
   { kind: "work", dept: "fin", dur: 8, label: "Xuất hoá đơn {p}", stage: "Thanh toán" },
@@ -60,7 +62,9 @@ export class OfficeSim {
     this.revenue = 0;
     this.meeting = null;
     this.pantryUsed = new Set();
-    this.timers = { project: 2, coffee: 9, peer: 5, hr: 16, ceo: 26, meeting: 75, pair: 30 };
+    this.timers = { project: 2, coffee: 9, peer: 5, hr: 16, ceo: 26, meeting: 75, pair: 30, live: 20 };
+    this.affOrders = 0;
+    this.live = null;
 
     this.agents = buildRoster().map((r, i) => ({
       ...r,
@@ -202,7 +206,10 @@ export class OfficeSim {
       case "wait":
       case "say":
         act.left = act.dur;
-        if (act.t === "say") this.say(a, act.text, act.dur);
+        if (act.t === "say") {
+          this.say(a, act.text, act.dur);
+          if (act.log) this.log(a, act.text, act.log);
+        }
         break;
       case "work":
         a.task = act.label;
@@ -365,6 +372,9 @@ export class OfficeSim {
       if (ceo && target) this.visit(ceo, target, pick(TALKS.ceo), {}, null, `Đi một vòng, ghé ${target.name}`);
       T.ceo = this.t + rand(35, 55);
     }
+    if (this.t > T.live) {
+      T.live = this.t + (this.startLive() ? rand(70, 110) : 15);
+    }
     if (this.t > T.meeting) {
       T.meeting = this.t + (this.startMeeting() ? rand(110, 160) : 20);
     }
@@ -409,7 +419,15 @@ export class OfficeSim {
       if (!a) return;
       p.busy = true;
       p.who[s.dept] = a;
-      a.queue.push({ t: "work", dur: s.dur * rand(0.85, 1.2), label: fill(s.label, ctx), onDone: advance });
+      const done = s.orders
+        ? () => {
+          const n = Math.round(rand(80, 400));
+          this.affOrders += n;
+          this.log(a, `🛒 Chiến dịch affiliate "${p.name}" ra ${n} đơn qua link KOC!`, "system");
+          advance();
+        }
+        : advance;
+      a.queue.push({ t: "work", dur: s.dur * rand(0.85, 1.2), label: fill(s.label, ctx), onDone: done });
     } else {
       const a = this.pickFor(p, s.from);
       if (!a) return;
@@ -483,7 +501,7 @@ export class OfficeSim {
   }
 
   peerChat(agent) {
-    const depts = agent ? [agent.dept] : shuffle(["tech", "mkt", "sales", "fin", "hr"]);
+    const depts = agent ? [agent.dept] : shuffle(["tech", "mkt", "aff", "sales", "fin", "hr"]);
     for (const d of depts) {
       const a = agent ?? this.freeIn(d)[0];
       const b = this.freeIn(d, a)[0];
@@ -507,7 +525,7 @@ export class OfficeSim {
     if (this.meeting) return false;
     const ceo = this.inDept("ceo")[0];
     if (!this.available(ceo)) return false;
-    const others = ["tech", "mkt", "sales", "fin", "hr"].map((d) => this.freeIn(d)[0]).filter(Boolean);
+    const others = ["tech", "mkt", "aff", "sales", "fin", "hr"].map((d) => this.freeIn(d)[0]).filter(Boolean);
     if (others.length < 2) return false;
     const people = [ceo, ...others].slice(0, MEETING_SEATS.length);
     const m = { people, arrived: new Set(), state: "gather", wait: 0, idx: -1, left: 0, lines: [], done: false };
@@ -531,6 +549,7 @@ export class OfficeSim {
         n: this.projects.filter((p) => !p.finished).length,
         d: this.done,
         r: fmtMoney(this.revenue),
+        k: this.affOrders,
       };
       const [ceo, ...rest] = m.people;
       m.lines = [
@@ -557,7 +576,52 @@ export class OfficeSim {
     }
   }
 
+  // Livestream bán hàng ở Studio: 1 host (Affiliate) + 1 trợ lý
+  startLive() {
+    if (this.live) return false;
+    const host = this.freeIn("aff")[0];
+    if (!host) return false;
+    const helper = this.freeIn("aff", host)[0] ?? this.freeIn("mkt")[0];
+    const c = pick(CLIENTS);
+    const live = { done: false };
+    this.live = live;
+    const lines = LIVE_LINES.map((l) => fill(l, { c }));
+    host.queue.push(
+      { t: "go", spot: STUDIO_SPOTS[0], status: "Livestream bán hàng 🔴" },
+      { t: "call", fn: () => this.log(host, `🔴 ${host.name} lên sóng livestream bán hàng cho ${c}!`, "system") },
+      ...lines.map((text) => ({ t: "say", text, dur: lineDur(text) + 0.6, log: "live" })),
+      {
+        t: "call",
+        fn: () => {
+          const n = Math.round(rand(150, 600));
+          this.affOrders += n;
+          this.log(host, `🛒 Livestream kết thúc: chốt ${n} đơn cho ${c}!`, "system");
+          live.done = true;
+          this.live = null;
+        },
+      },
+    );
+    if (helper) {
+      helper.queue.push(
+        { t: "go", spot: STUDIO_SPOTS[1], status: `Hỗ trợ live cùng ${host.name}` },
+        { t: "wait", dur: 4 },
+        { t: "say", text: pick(LIVE_HELPER), dur: 3 },
+        { t: "wait", dur: 5 },
+        { t: "say", text: pick(LIVE_HELPER), dur: 3 },
+        { t: "hold", until: () => live.done },
+      );
+    }
+    this.touch();
+    return true;
+  }
+
   // ---------- lệnh từ người dùng ----------
+  cmdLive() {
+    const ok = this.startLive();
+    if (ok) this.timers.live = this.t + rand(70, 110);
+    return ok;
+  }
+
   cmdCoffee(id) {
     const a = this.byId[id];
     if (!this.available(a)) return false;

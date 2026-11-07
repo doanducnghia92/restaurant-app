@@ -19,8 +19,8 @@ If you are developing a production application, we recommend using TypeScript wi
 
 # 🏢 Văn phòng Agent 3D (`/office.html`)
 
-Văn phòng ảo 3D phong cách chibi dễ thương: 14 nhân viên là các agent làm việc trong 6 phòng ban
-(Kỹ thuật, Marketing, Kinh doanh, Kế toán, Giám đốc, Nhân sự) cùng Phòng họp và Pantry.
+Văn phòng ảo 3D phong cách chibi dễ thương: 17 nhân viên là các agent làm việc trong 6 phòng ban
+(Kỹ thuật, Marketing, Affiliate, Kinh doanh, Kế toán, Giám đốc, Nhân sự) cùng Phòng họp, Studio Live và Pantry.
 Các agent tự làm việc, đi lại và trao đổi với nhau theo thời gian thực.
 
 ```bash
@@ -30,15 +30,15 @@ npm run dev        # mở http://localhost:5173/office.html (trên điện tho�
 
 ## Mô phỏng
 - **Dự án đi qua các phòng ban**: khách gửi yêu cầu → Kinh doanh trao đổi với Kỹ thuật → Kỹ thuật lập trình
-  → bàn giao Marketing → Marketing làm truyền thông → gửi lại Kinh doanh chốt hợp đồng → Kế toán xuất hoá đơn → báo cáo CEO.
+  → bàn giao Marketing → Marketing làm truyền thông → Affiliate chạy chiến dịch qua KOC → báo số đơn cho Kinh doanh chốt hợp đồng → Kế toán xuất hoá đơn → báo cáo CEO.
 - **Sự kiện ngẫu nhiên**: hỏi ý kiến đồng nghiệp cùng phòng, nghỉ cà phê ở pantry (đi một mình hoặc rủ nhau),
-  HR đi hỏi thăm, sếp đi một vòng, họp giao ban định kỳ.
+  HR đi hỏi thăm, sếp đi một vòng, họp giao ban định kỳ, team Affiliate ra Studio livestream chốt đơn.
 - Đồng hồ: 1 giây thực = 1 phút trong văn phòng (08:00 → 18:00), có thể tăng tốc 2x/4x hoặc tạm dừng.
 
 ## Điều khiển trên điện thoại
 - 1 ngón kéo bản đồ, 2 ngón chụm để zoom / xoay (nút ✋/🔄 để đổi sang 1 ngón xoay camera).
 - Chạm vào nhân viên để xem thẻ thông tin, camera tự theo dõi; có thể cho nghỉ ☕ hoặc đi trao đổi 💬.
-- Thanh chip phía trên để bay nhanh tới từng phòng; nút 📩 tạo dự án mới, 📣 triệu tập họp.
+- Thanh chip phía trên để bay nhanh tới từng phòng; nút 📩 tạo dự án mới, 📣 triệu tập họp, 🔴 bắt đầu livestream.
 - Bảng dưới: 💬 nhật ký trao đổi, 👥 trạng thái nhân viên, 📁 tiến độ dự án.
 
 ## Cấu trúc mã (`src/office`)

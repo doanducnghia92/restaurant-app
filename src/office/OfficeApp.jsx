@@ -123,6 +123,7 @@ function ChatLog({ sim, onPick }) {
                 <b style={{ color: ZONES[l.dept].accent }}>{l.from}</b>
                 {l.to && <span className="to"> → {l.to}</span>}
                 {l.kind === "meeting" && <span className="to"> · 📋 họp</span>}
+                {l.kind === "live" && <span className="to"> · 🔴 live</span>}
                 <span className="time">{l.clock}</span>
               </div>
               <div className="log-text">{l.text}</div>
@@ -242,7 +243,7 @@ export default function OfficeApp() {
   const flyTo = (zone) => {
     setFollowing(null);
     view.follow = null;
-    view.fly = zone ? { x: zone.x, z: zone.z, dist: portrait ? 17 : 14 } : { x: 0, z: 0, dist: portrait ? 46 : 34 };
+    view.fly = zone ? { x: zone.x, z: zone.z, dist: portrait ? 17 : 14 } : { x: 0, z: 0, dist: portrait ? 56 : 40 };
   };
 
   const setSpeed = (s) => {
@@ -260,7 +261,7 @@ export default function OfficeApp() {
         shadows={{ type: THREE.PCFShadowMap }}
         dpr={[1, smallScreen ? 1.5 : 2]}
         flat
-        camera={{ fov: 45, position: portrait ? [30, 36, 0.01] : [0, 24, 24], near: 0.5, far: 200 }}
+        camera={{ fov: 45, position: portrait ? [36, 43, 0.01] : [0, 28, 28], near: 0.5, far: 220 }}
         onPointerMissed={() => closeCard()}
       >
         <color attach="background" args={["#d5ecff"]} />
@@ -271,8 +272,8 @@ export default function OfficeApp() {
           intensity={2.2}
           castShadow
           shadow-mapSize={smallScreen ? [1024, 1024] : [2048, 2048]}
-          shadow-camera-left={-24}
-          shadow-camera-right={24}
+          shadow-camera-left={-29}
+          shadow-camera-right={29}
           shadow-camera-top={16}
           shadow-camera-bottom={-16}
           shadow-camera-near={1}
@@ -291,7 +292,7 @@ export default function OfficeApp() {
       <header className="topbar">
         <div className="brand">🏢 <span>Văn phòng Agent</span></div>
         <div className="clock">Ngày {sim.day} · {fmtClock(sim.clock)}</div>
-        <div className="kpi">📁 {activeProjects} · ✅ {sim.done} · 💰 {fmtMoney(sim.revenue)}</div>
+        <div className="kpi">📁 {activeProjects} · ✅ {sim.done} · 💰 {fmtMoney(sim.revenue)} · 🛒 {sim.affOrders.toLocaleString("vi-VN")} đơn</div>
         <div className="speed">
           <button className={sim.paused ? "on" : ""} onClick={() => setSpeed(0)} aria-label="Tạm dừng">{sim.paused ? "▶" : "❚❚"}</button>
           {[1, 2, 4].map((s) => (
@@ -311,6 +312,7 @@ export default function OfficeApp() {
       <div className="fabs">
         <button onClick={() => { sim.cmdProject(); toast("📩 Có khách hàng mới gửi yêu cầu!"); }} title="Dự án mới">📩<small>Dự án</small></button>
         <button onClick={() => toast(sim.cmdMeeting() ? "📣 Sếp triệu tập họp!" : "Chưa họp được (sếp bận / đang họp)")} title="Họp">📣<small>Họp</small></button>
+        <button onClick={() => toast(sim.cmdLive() ? "🔴 Team Affiliate lên sóng livestream!" : "Studio đang live hoặc team Affiliate đang bận")} title="Livestream">🔴<small>Live</small></button>
         <button onClick={() => { setTouchMode((m) => (m === "pan" ? "rotate" : "pan")); toast(touchMode === "pan" ? "1 ngón: xoay camera" : "1 ngón: kéo bản đồ"); }} title="Chế độ chạm">
           {touchMode === "pan" ? "✋" : "🔄"}<small>{touchMode === "pan" ? "Kéo" : "Xoay"}</small>
         </button>

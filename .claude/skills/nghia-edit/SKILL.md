@@ -8,7 +8,7 @@ This skill produces 9:16 vertical short-form real estate and personal-brand vide
 
 ## When to Use
 
-- The user asks to edit a video using the standalone `@quyettranlux` skill (separate from v9) or specifically mentions `quyet-tran-lux-video-editor`, `tran-quyet-lux-video-editor`, `Quyet Tran`, `@quyettranlux`, or `v10`.
+- The user asks to edit a video using the standalone `@quyettranlux` skill (separate from v9) or specifically mentions `nghia-edit`, `quyet-tran-lux-video-editor`, `tran-quyet-lux-video-editor`, `Quyet Tran`, `@quyettranlux`, or `v10`.
 - The user wants a "Review nhanh du an" (pros/cons/price/policy breakdown), "So sanh nhanh 2 du an" (project comparison), "Phan tich 5 diem truoc khi xuong tien", financial calculation breakdown (*bài toán dòng tiền / lãi suất / ưu đãi*), or personal branding talking-head video with `@quyettranlux` visual conventions.
 - **Unique Output Filename Rule**: Whenever rendering a revised version of a video in the same conversation, **always save to a new unique filename** (e.g., `..._v2.mp4`, `..._Option2_Final.mp4`) so the chat player never serves a cached earlier video.
 

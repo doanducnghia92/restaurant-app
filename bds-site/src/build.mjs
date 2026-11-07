@@ -5,6 +5,9 @@ import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { SITE, DEVELOPERS, AREAS, PROJECTS, FAQ_GENERAL } from './data.mjs';
 import { DETAILS } from './details.mjs';
+import { gallerySection, plansSection, videoSection, policySection, calcWidget, defaultPrice } from './parts.mjs';
+import { RATES } from './media.mjs';
+import { existsSync } from 'node:fs';
 
 // gộp thông tin chi tiết vào từng dự án
 for (const p of PROJECTS) Object.assign(p, DETAILS[p.slug] || {});
@@ -12,6 +15,20 @@ for (const p of PROJECTS) Object.assign(p, DETAILS[p.slug] || {});
 const __dir = dirname(fileURLToPath(import.meta.url));
 const OUT = join(__dir, '..', 'site');
 const urls = [];
+
+// ảnh thật: src/images/<slug>/*.{jpg,png,webp}
+const IMG_DIR = join(__dir, 'images');
+const REAL = {};
+for (const p of PROJECTS) {
+  const d = join(IMG_DIR, p.slug);
+  REAL[p.slug] = existsSync(d)
+    ? readdirSync(d).filter((f) => /\.(jpe?g|png|webp|avif)$/i.test(f)).sort().map((f) => ({
+        file: join(d, f),
+        src: `assets/img/${p.slug}/${f}`,
+        caption: f.replace(/\.[a-z]+$/i, '').replace(/^\d+[-_ ]*/, '').replace(/[-_]+/g, ' ') || p.name,
+      }))
+    : [];
+}
 
 // ---------- helpers ----------
 const esc = (s = '') => String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
@@ -28,12 +45,15 @@ function hash(str) {
 }
 
 // Ảnh minh hoạ kiến trúc sinh tự động (SVG) — không dùng ảnh bản quyền
-function art(p, { w = 800, h = 560, cls = '' } = {}) {
-  const r = hash(p.slug);
+function art(p, { w = 800, h = 560, cls = '', seed = '', night = false, dusk = false } = {}) {
+  const r = hash(p.slug + seed);
   const [c1, c2, ac] = p.palette;
-  const id = p.slug.replace(/[^a-z0-9]/g, '');
+  const mode = night ? 'n' : dusk ? 'd' : '';
+  const id = p.slug.replace(/[^a-z0-9]/g, '') + seed + mode;
   const low = p.types.some((t) => /Biệt thự|Nhà phố|Đất nền/.test(t)) && !p.types.includes('Căn hộ');
   const horizon = h * 0.7;
+  const win = night ? '#ffd27a' : '#fff6e0';
+  const winP = night ? 0.4 : 0.55;
   let towers = '';
   let x = -10;
   while (x < w) {
@@ -41,31 +61,38 @@ function art(p, { w = 800, h = 560, cls = '' } = {}) {
     const th = low ? 40 + r() * 70 : 90 + r() * (h * 0.55);
     const y = horizon - th;
     const op = (0.55 + r() * 0.45).toFixed(2);
-    towers += `<rect x="${x.toFixed(1)}" y="${y.toFixed(1)}" width="${tw.toFixed(1)}" height="${th.toFixed(1)}" fill="url(#t${id})" opacity="${op}"/>`;
-    if (low) towers += `<path d="M${x - 4} ${y} L${x + tw / 2} ${y - 22 - r() * 14} L${x + tw + 4} ${y} Z" fill="${c2}" opacity="${op}"/>`;
-    else if (r() > 0.6) towers += `<rect x="${(x + tw / 2 - 1).toFixed(1)}" y="${(y - 30).toFixed(1)}" width="2" height="30" fill="${ac}" opacity=".7"/>`;
-    // windows
+    towers += `<rect x="${x.toFixed(1)}" y="${y.toFixed(1)}" width="${tw.toFixed(1)}" height="${th.toFixed(1)}" fill="url(#t${id})" opacity="${night ? 1 : op}"/>`;
+    if (low) towers += `<path d="M${x - 4} ${y} L${x + tw / 2} ${y - 22 - r() * 14} L${x + tw + 4} ${y} Z" fill="${night ? '#0d1626' : c2}" opacity="${op}"/>`;
+    else if (r() > 0.6) towers += `<rect x="${(x + tw / 2 - 1).toFixed(1)}" y="${(y - 30).toFixed(1)}" width="2" height="30" fill="${night ? '#ff6b5a' : ac}" opacity=".8"/>`;
     for (let wy = y + 10; wy < horizon - 8; wy += 14) {
-      if (r() > 0.55) towers += `<rect x="${(x + 6).toFixed(1)}" y="${wy.toFixed(1)}" width="${(tw - 12).toFixed(1)}" height="2" fill="#fff6e0" opacity="${(0.25 + r() * 0.5).toFixed(2)}"/>`;
+      if (r() > winP) towers += `<rect x="${(x + 6).toFixed(1)}" y="${wy.toFixed(1)}" width="${(tw - 12).toFixed(1)}" height="2" fill="${win}" opacity="${((night ? 0.5 : 0.25) + r() * 0.5).toFixed(2)}"/>`;
     }
     x += tw + 4 + r() * 18;
   }
   const sunX = (0.2 + r() * 0.6) * w;
-  return `<svg class="art ${cls}" viewBox="0 0 ${w} ${h}" preserveAspectRatio="xMidYMid slice" role="img" aria-label="Phối cảnh minh hoạ ${esc(p.name)}" xmlns="http://www.w3.org/2000/svg">
+  const sky = night
+    ? `<stop offset="0" stop-color="#070d1c"/><stop offset=".65" stop-color="#16264a"/><stop offset="1" stop-color="${c2}" stop-opacity=".9"/>`
+    : dusk
+      ? `<stop offset="0" stop-color="#3b3d6b"/><stop offset=".55" stop-color="#d98b6a"/><stop offset="1" stop-color="#f6d49a"/>`
+      : `<stop offset="0" stop-color="${c2}" stop-opacity=".55"/><stop offset=".7" stop-color="#fbf6ec"/><stop offset="1" stop-color="${ac}" stop-opacity=".7"/>`;
+  const tw2 = night ? `<stop offset="0" stop-color="#1a2440"/><stop offset="1" stop-color="#0a0f1d"/>` : dusk ? `<stop offset="0" stop-color="${c1}" stop-opacity=".8"/><stop offset="1" stop-color="#1b1b2e"/>` : `<stop offset="0" stop-color="${c2}" stop-opacity=".75"/><stop offset="1" stop-color="${c1}"/>`;
+  const water = night ? `<stop offset="0" stop-color="#16264a"/><stop offset="1" stop-color="#050912"/>` : `<stop offset="0" stop-color="${dusk ? '#d98b6a' : c2}" stop-opacity=".45"/><stop offset="1" stop-color="${c1}" stop-opacity=".85"/>`;
+  const stars = night ? Array.from({ length: 40 }, () => `<circle cx="${(r() * w).toFixed(0)}" cy="${(r() * horizon * 0.6).toFixed(0)}" r="${(r() * 1.3 + 0.3).toFixed(1)}" fill="#fff" opacity="${(0.3 + r() * 0.6).toFixed(2)}"/>`).join('') : '';
+  return `<svg class="art ${cls}" viewBox="0 0 ${w} ${h}" preserveAspectRatio="xMidYMid slice" role="img" aria-label="Phối cảnh minh hoạ ${esc(p.name)}${night ? ' về đêm' : dusk ? ' hoàng hôn' : ''}" xmlns="http://www.w3.org/2000/svg">
 <defs>
-<linearGradient id="s${id}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="${c2}" stop-opacity=".55"/><stop offset=".7" stop-color="#fbf6ec"/><stop offset="1" stop-color="${ac}" stop-opacity=".7"/></linearGradient>
-<linearGradient id="t${id}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="${c2}" stop-opacity=".75"/><stop offset="1" stop-color="${c1}"/></linearGradient>
-<linearGradient id="w${id}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="${c2}" stop-opacity=".45"/><stop offset="1" stop-color="${c1}" stop-opacity=".85"/></linearGradient>
-<radialGradient id="g${id}"><stop offset="0" stop-color="#fff"/><stop offset=".35" stop-color="${ac}" stop-opacity=".55"/><stop offset="1" stop-color="${ac}" stop-opacity="0"/></radialGradient>
+<linearGradient id="s${id}" x1="0" y1="0" x2="0" y2="1">${sky}</linearGradient>
+<linearGradient id="t${id}" x1="0" y1="0" x2="0" y2="1">${tw2}</linearGradient>
+<linearGradient id="w${id}" x1="0" y1="0" x2="0" y2="1">${water}</linearGradient>
+<radialGradient id="g${id}"><stop offset="0" stop-color="#fff"/><stop offset=".35" stop-color="${night ? '#cfd8ff' : ac}" stop-opacity="${night ? 0.25 : 0.55}"/><stop offset="1" stop-color="${ac}" stop-opacity="0"/></radialGradient>
 </defs>
-<rect width="${w}" height="${h}" fill="#fbf7ef"/><rect width="${w}" height="${h}" fill="url(#s${id})"/>
-<circle class="art-sun" cx="${sunX.toFixed(0)}" cy="${(horizon - 60).toFixed(0)}" r="160" fill="url(#g${id})"/>
-<circle cx="${sunX.toFixed(0)}" cy="${(horizon - 60).toFixed(0)}" r="34" fill="#fffaf0" opacity=".95"/>
+<rect width="${w}" height="${h}" fill="${night ? '#070d1c' : '#fbf7ef'}"/><rect width="${w}" height="${h}" fill="url(#s${id})"/>${stars}
+<circle class="art-sun" cx="${sunX.toFixed(0)}" cy="${(horizon - (night ? 200 : 60)).toFixed(0)}" r="${night ? 90 : 160}" fill="url(#g${id})"/>
+<circle cx="${sunX.toFixed(0)}" cy="${(horizon - (night ? 200 : 60)).toFixed(0)}" r="${night ? 20 : 34}" fill="${night ? '#f3ead2' : dusk ? '#ffd9a0' : '#fffaf0'}" opacity=".95"/>
 <g class="art-city">${towers}</g>
 <rect y="${horizon}" width="${w}" height="${h - horizon}" fill="url(#w${id})"/>
-<g opacity=".18" transform="translate(0 ${horizon * 2}) scale(1 -1)">${towers}</g>
+<g opacity="${night ? 0.3 : 0.18}" transform="translate(0 ${horizon * 2}) scale(1 -1)">${towers}</g>
 <rect y="${horizon}" width="${w}" height="${h - horizon}" fill="url(#w${id})" opacity=".35"/>
-<g stroke="#fff" stroke-opacity=".6" stroke-width="1.2">${Array.from({ length: 6 }, (_, i) => `<line x1="${(sunX - 60 + r() * 30).toFixed(0)}" x2="${(sunX + 40 + r() * 40).toFixed(0)}" y1="${(horizon + 12 + i * 12).toFixed(0)}" y2="${(horizon + 12 + i * 12).toFixed(0)}"/>`).join('')}</g>
+<g stroke="${night ? '#ffd27a' : '#fff'}" stroke-opacity=".6" stroke-width="1.2">${Array.from({ length: 6 }, (_, i) => `<line x1="${(sunX - 60 + r() * 30).toFixed(0)}" x2="${(sunX + 40 + r() * 40).toFixed(0)}" y1="${(horizon + 12 + i * 12).toFixed(0)}" y2="${(horizon + 12 + i * 12).toFixed(0)}"/>`).join('')}</g>
 </svg>`;
 }
 
@@ -75,6 +102,7 @@ const NAV = [
   ['Chủ đầu tư', '#chu-dau-tu'],
   ['Khu vực', '#khu-vuc'],
   ['Bảng giá', 'du-an/#bang-gia'],
+  ['Tính lãi vay', 'cong-cu/tinh-lai-vay/'],
   ['Hỏi đáp', '#hoi-dap'],
 ];
 
@@ -153,6 +181,7 @@ ${leadForm()}
 <div class="toast" role="status" aria-live="polite"></div>
 <script>window.__SITE=${JSON.stringify({ email: SITE.email, endpoint: SITE.formEndpoint, zalo: SITE.zalo })}</script>
 <script src="${R}assets/main.js" defer></script>
+<script src="${R}assets/extras.js" defer></script>
 </body>
 </html>`;
 
@@ -185,7 +214,7 @@ function card(p, R, i = 0) {
   const d = DEVELOPERS[p.dev];
   return `<article class="card tilt reveal" style="--d:${(i % 3) * 80}ms" data-dev="${p.dev}" data-area="${p.area}" data-types="${esc(p.types.join('|'))}">
   <a href="${R}du-an/${p.slug}/" class="card-link" data-cursor="Xem">
-    <div class="card-media">${art(p, { w: 640, h: 440 })}<span class="badge">${esc(p.status)}</span></div>
+    <div class="card-media">${REAL[p.slug]?.[0] ? `<img src="${R}${REAL[p.slug][0].src}" alt="${esc(p.name)}" loading="lazy" decoding="async">` : art(p, { w: 640, h: 440 })}<span class="badge">${esc(p.status)}</span></div>
     <div class="card-body">
       <p class="card-dev" style="--c:${d.color}">${esc(d.name)} · ${esc(AREAS[p.area].seo)}</p>
       <h3 class="card-title">${esc(p.name)}</h3>
@@ -325,6 +354,13 @@ function home() {
   </div>
 </section>
 
+<section class="sec calc-teaser">
+  <div class="wrap">
+    <div class="sec-head"><div><p class="eyebrow reveal">Công cụ tài chính</p><h2 class="h2 split">Tính thử <em>lãi vay</em> mua nhà</h2></div><a class="btn btn-line magnetic" href="${R}cong-cu/tinh-lai-vay/"><span>Mở công cụ đầy đủ →</span></a></div>
+    ${calcWidget(5, { id: 'calc-home', title: 'Ước tính nhanh khoản vay', projects: PROJECTS })}
+  </div>
+</section>
+
 <section class="sec" id="bang-gia">
   <div class="wrap">
     <p class="eyebrow reveal">Cập nhật ${yearsAgo}</p><h2 class="h2 split">Bảng giá dự án <em>tổng hợp</em></h2>
@@ -415,7 +451,7 @@ function project(p) {
   const facts = [['Vị trí', p.address], ['Chủ đầu tư', d.full], ['Quy mô', p.scale], ['Loại hình', p.types.join(', ')], ['Giá tham khảo', p.price], ['Pháp lý', p.legal], ['Bàn giao', p.handover], ['Tình trạng', p.status]];
   const body = `
 <section class="phero">
-  <div class="phero-art parallax" data-speed="0.25">${art(p, { w: 1600, h: 900 })}</div>
+  <div class="phero-art parallax" data-speed="0.25">${REAL[p.slug]?.[0] ? `<img src="${R}${REAL[p.slug][0].src}" alt="${esc(p.name)}" fetchpriority="high">` : art(p, { w: 1600, h: 900 })}</div>
   <div class="phero-veil"></div>
   <div class="wrap phero-inner">
     ${breadcrumb([['Dự án', 'du-an/'], [d.name, `chu-dau-tu/${p.dev}/`], [p.name, null]], R)}
@@ -428,10 +464,12 @@ function project(p) {
 
 <section class="sec"><div class="wrap detail">
   <article class="detail-main">
-    <nav class="toc reveal" aria-label="Mục lục"><a href="#tong-quan">Tổng quan</a><a href="#thong-so">Thông số</a><a href="#noi-bat">Điểm nổi bật</a><a href="#loai-can">Loại căn & giá</a><a href="#ket-noi">Kết nối</a><a href="#tien-do">Tiến độ</a><a href="#phan-khu">Phân khu</a><a href="#tien-ich">Tiện ích</a><a href="#vi-tri">Vị trí</a><a href="#hoi-dap">Hỏi đáp</a></nav>
+    <nav class="toc reveal" aria-label="Mục lục"><a href="#tong-quan">Tổng quan</a><a href="#hinh-anh">Hình ảnh</a><a href="#thong-so">Thông số</a><a href="#mat-bang">Mặt bằng</a><a href="#loai-can">Loại căn & giá</a><a href="#video">Video</a><a href="#ket-noi">Kết nối</a><a href="#tien-do">Tiến độ</a><a href="#chinh-sach">Chính sách</a><a href="#tinh-lai">Tính lãi vay</a><a href="#hoi-dap">Hỏi đáp</a></nav>
     <h2 class="h3" id="tong-quan">Tổng quan dự án ${esc(p.name)}</h2>
     ${(p.overview || [p.summary]).map((t, i) => `<p class="${i ? '' : 'lead-p '}reveal">${esc(t)}</p>`).join('')}
     <p class="reveal">Dự án thuộc danh mục của <a href="${R}chu-dau-tu/${p.dev}/">${esc(d.name)}</a> tại <a href="${R}khu-vuc/${p.area}/">${esc(a.name)}</a>. ${esc(a.intro)}</p>
+
+    ${gallerySection(p, art, REAL[p.slug], R)}
 
     ${p.specs ? `<h2 class="h3" id="thong-so">Thông số kỹ thuật ${esc(p.name)}</h2>
     <div class="table-wrap specs reveal"><table class="stable"><caption class="sr">Thông số dự án ${esc(p.name)}</caption><tbody>${p.specs.map(([k, v]) => `<tr><th scope="row">${esc(k)}</th><td>${esc(v)}</td></tr>`).join('')}</tbody></table></div>` : ''}
@@ -439,7 +477,9 @@ function project(p) {
     <h2 class="h3" id="noi-bat">Điểm nổi bật ${esc(p.name)}</h2>
     <ol class="hl">${p.highlights.map((h, i) => `<li class="reveal" style="--d:${i * 70}ms"><span>0${i + 1}</span>${esc(h)}</li>`).join('')}</ol>
 
-    <h2 class="h3" id="phan-khu">Mặt bằng & phân khu</h2>
+    ${plansSection(p)}
+
+    <h2 class="h3" id="phan-khu">Phân khu ${esc(p.name)}</h2>
     <div class="pills reveal">${p.subzones.map((s) => `<span>${esc(s)}</span>`).join('')}</div>
 
     ${p.units ? `<h2 class="h3" id="loai-can">Loại căn, diện tích & giá ${esc(p.name)}</h2>
@@ -448,6 +488,8 @@ function project(p) {
 
     <h2 class="h3" id="tien-ich">Tiện ích nội khu</h2>
     <ul class="amen">${p.amenities.map((x, i) => `<li class="reveal" style="--d:${i * 50}ms">${esc(x)}</li>`).join('')}</ul>
+
+    ${videoSection(p, art)}
 
     <h2 class="h3" id="vi-tri">Vị trí ${esc(p.name)}</h2>
     <p class="reveal">Địa chỉ: <strong>${esc(p.address)}</strong>.</p>
@@ -461,7 +503,12 @@ function project(p) {
     ${p.fit ? `<h2 class="h3">${esc(p.name)} phù hợp với ai?</h2>
     <div class="pills reveal">${p.fit.map((x) => `<span>${esc(x)}</span>`).join('')}</div>` : ''}
 
-    <h2 class="h3">Bảng giá & chính sách bán hàng ${esc(p.name)}</h2>
+    ${policySection(p, d.name)}
+
+    <h2 class="h3" id="tinh-lai">Tính lãi vay mua ${esc(p.name)}</h2>
+    ${calcWidget(defaultPrice(p), { id: 'calc-' + p.slug, title: `Ước tính khoản vay – ${p.name}` })}
+
+    <h2 class="h3">Bảng giá ${esc(p.name)}</h2>
     <p class="reveal">Giá tham khảo: <strong class="gold">${esc(p.price)}</strong>. Chính sách thanh toán, chiết khấu và hỗ trợ vay được cập nhật theo từng đợt mở bán của ${esc(d.name)}. <a href="#dang-ky">Đăng ký nhận bảng giá chi tiết</a>.</p>
     ${p.sources ? `<div class="srcs reveal"><h3>Nguồn tham khảo</h3><ul>${p.sources.map(([t, u]) => `<li><a href="${esc(u)}" target="_blank" rel="noopener nofollow">${esc(t)}</a></li>`).join('')}</ul><p class="small muted">Thông tin tổng hợp từ báo chí & nguồn công khai, cập nhật ${yearsAgo}. Vui lòng đối chiếu hồ sơ pháp lý chính thức của chủ đầu tư.</p></div>` : ''}
     <p class="tags">${p.keywords.map((k) => `<span>#${esc(k)}</span>`).join('')}</p>
@@ -577,6 +624,42 @@ function notFound() {
   return html.replace('content="index, follow, max-image-preview:large"', 'content="noindex"');
 }
 
+function calcPage() {
+  const R = '../../';
+  const faqs = [
+    ['Cách tính lãi vay mua nhà theo dư nợ giảm dần?', 'Mỗi tháng trả số gốc cố định = Khoản vay / số tháng trả gốc; tiền lãi = Dư nợ còn lại × lãi suất năm / 12. Số tiền trả giảm dần theo thời gian.'],
+    ['Trả đều hằng tháng (niên kim) khác gì dư nợ giảm dần?', 'Trả đều giữ số tiền mỗi tháng gần như không đổi trong cùng mức lãi suất, giai đoạn đầu chủ yếu trả lãi. Tổng lãi thường cao hơn phương án gốc đều, lãi giảm dần.'],
+    ['Lãi suất vay mua nhà hiện nay bao nhiêu?', `Tham khảo 08 – 11/2026: lãi cố định 12 – 24 tháng bình quân khoảng 10,9%/năm; một số gói ưu đãi từ ${RATES.promo}%/năm. Sau ưu đãi, lãi thả nổi thường bằng lãi tham chiếu (~9,3%) cộng biên độ 3 – 7%.`],
+    ['Vay mua nhà được tối đa bao nhiêu phần trăm?', 'Phổ biến 70% giá trị tài sản bảo đảm; một số dự án có ngân hàng bảo lãnh cho vay đến 80%. Ngân hàng xét theo thu nhập: tổng nghĩa vụ trả nợ thường không vượt 50 – 60% thu nhập.'],
+    ['Ân hạn nợ gốc là gì?', 'Là khoảng thời gian chỉ trả lãi, chưa phải trả gốc (thường 6 – 24 tháng). Giúp giảm áp lực giai đoạn đầu nhưng làm tăng tổng lãi phải trả.'],
+  ];
+  return layout({
+    path: 'cong-cu/tinh-lai-vay/index.html',
+    title: `Công cụ tính lãi vay mua nhà ${new Date(SITE.updated).getFullYear()} – trả góp hằng tháng | ${SITE.shortName}`,
+    desc: 'Tính lãi vay mua nhà, căn hộ: số tiền trả hằng tháng, tổng lãi, vốn tự có, lịch trả nợ theo năm. Hỗ trợ lãi ưu đãi, lãi thả nổi, ân hạn nợ gốc, dư nợ giảm dần hoặc trả đều.',
+    keywords: ['tính lãi vay mua nhà', 'công cụ tính lãi vay', 'lãi suất vay mua nhà 2026', 'tính trả góp căn hộ', 'vay mua chung cư'],
+    body: `<section class="phero phero-sm"><div class="wrap">
+  ${breadcrumb([['Công cụ', null], ['Tính lãi vay', null]], R)}
+  <p class="eyebrow">Công cụ tài chính</p>
+  <h1 class="h1 split">Tính lãi vay <em>mua nhà</em></h1>
+  <p class="muted lead-p">Ước tính số tiền trả hằng tháng, tổng lãi và vốn tự có khi vay mua căn hộ, nhà phố, biệt thự. Chọn dự án để tự điền giá tham khảo hoặc nhập giá bất kỳ.</p>
+</div></section>
+<section class="sec pt0"><div class="wrap">${calcWidget(5, { id: 'calc-page', title: 'Thông tin khoản vay', projects: PROJECTS })}</div></section>
+<section class="sec seo-text"><div class="wrap narrow reveal">
+  <h2 class="h3">Công thức tính lãi vay mua nhà</h2>
+  <p><strong>Dư nợ giảm dần (gốc đều):</strong> Gốc hằng tháng = Khoản vay ÷ Số tháng trả gốc. Lãi tháng = Dư nợ còn lại × Lãi suất năm ÷ 12.</p>
+  <p><strong>Trả đều (niên kim):</strong> Số tiền hằng tháng = Dư nợ × r ÷ (1 − (1 + r)<sup>−n</sup>), với r là lãi suất tháng và n là số tháng còn lại; được tính lại khi lãi suất thay đổi sau thời gian ưu đãi.</p>
+  <p><strong>Lưu ý:</strong> Lãi suất ưu đãi thường chỉ kéo dài 6 – 24 tháng. Hãy tính dòng tiền theo lãi suất sau ưu đãi để đảm bảo khả năng trả nợ. Nhiều chủ đầu tư có chương trình hỗ trợ lãi suất, ân hạn nợ gốc – xem mục “Chính sách bán hàng” trong từng <a href="${R}du-an/">trang dự án</a>.</p>
+</div></section>
+${faqBlock(faqs, 'Hỏi đáp về vay mua nhà')}`,
+    jsonld: [
+      crumbLd([['Tính lãi vay', 'cong-cu/tinh-lai-vay/']]),
+      { '@context': 'https://schema.org', '@type': 'WebApplication', name: 'Công cụ tính lãi vay mua nhà', applicationCategory: 'FinanceApplication', operatingSystem: 'Web', url: abs('cong-cu/tinh-lai-vay/'), offers: { '@type': 'Offer', price: 0, priceCurrency: 'VND' } },
+      faqLd(faqs),
+    ],
+  });
+}
+
 // ---------- write ----------
 function write(rel, content) {
   const f = join(OUT, rel);
@@ -589,7 +672,9 @@ write('du-an/index.html', listing());
 PROJECTS.forEach((p) => write(`du-an/${p.slug}/index.html`, project(p)));
 Object.keys(DEVELOPERS).forEach((k) => write(`chu-dau-tu/${k}/index.html`, developer(k)));
 Object.keys(AREAS).forEach((k) => write(`khu-vuc/${k}/index.html`, area(k)));
+write('cong-cu/tinh-lai-vay/index.html', calcPage());
 write('404.html', notFound());
+for (const p of PROJECTS) for (const f of REAL[p.slug]) { mkdirSync(join(OUT, dirname(f.src)), { recursive: true }); copyFileSync(f.file, join(OUT, f.src)); }
 
 mkdirSync(join(OUT, 'assets'), { recursive: true });
 for (const f of readdirSync(join(__dir, 'assets'))) copyFileSync(join(__dir, 'assets', f), join(OUT, 'assets', f));

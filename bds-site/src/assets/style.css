@@ -531,3 +531,7 @@ em{font-style:normal;color:var(--gold)}
   .lb-fig{padding:0 10px}
   .yt-play{width:64px}
 }
+
+.map-link{position:relative;display:block}
+.map-link svg{width:100%;height:100%;display:block;object-fit:cover}
+.map-btn{position:absolute;left:50%;bottom:18px;transform:translateX(-50%);padding:12px 20px;border-radius:999px;background:var(--navy);color:#fff;font-weight:500;font-size:.9rem;white-space:nowrap;max-width:calc(100% - 32px);overflow:hidden;text-overflow:ellipsis;box-shadow:var(--shadow-lg)}

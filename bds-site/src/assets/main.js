@@ -255,6 +255,7 @@
     if (!name || !/^\+?\d{9,12}$/.test(phone)) return toast('Vui lòng nhập họ tên và số điện thoại hợp lệ');
     const data = { name, phone, project: f.project.value || 'Tất cả', budget: f.budget.value, page: location.href };
     const S = window.__SITE || {};
+    if (S.preview) { toast('Bản xem thử: form chưa kết nối máy chủ. Vui lòng gọi hotline để được tư vấn.'); return; }
     if (S.endpoint) {
       try { await fetch(S.endpoint, { method: 'POST', body: JSON.stringify(data), headers: { 'Content-Type': 'text/plain' } }); toast('Cảm ơn anh/chị! Chuyên viên sẽ liên hệ trong 15 phút.'); f.reset(); return; } catch { /* fallback */ }
     }

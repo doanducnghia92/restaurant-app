@@ -1,11 +1,11 @@
 // Static site generator — chạy: node bds-site/src/build.mjs
 // Xuất ra bds-site/site (HTML tĩnh, chuẩn SEO, không cần server)
-import { mkdirSync, writeFileSync, copyFileSync, rmSync, readdirSync } from 'node:fs';
+import { mkdirSync, writeFileSync, copyFileSync, rmSync, readdirSync, readFileSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { SITE, DEVELOPERS, AREAS, PROJECTS, FAQ_GENERAL } from './data.mjs';
 import { DETAILS } from './details.mjs';
-import { gallerySection, plansSection, videoSection, policySection, calcWidget, defaultPrice } from './parts.mjs';
+import { gallerySection, plansSection, videoSection, policySection, calcWidget, defaultPrice, masterplan as masterplanFn } from './parts.mjs';
 import { RATES } from './media.mjs';
 import { existsSync } from 'node:fs';
 
@@ -13,7 +13,9 @@ import { existsSync } from 'node:fs';
 for (const p of PROJECTS) Object.assign(p, DETAILS[p.slug] || {});
 
 const __dir = dirname(fileURLToPath(import.meta.url));
-const OUT = join(__dir, '..', 'site');
+// ARTIFACT_OUT=<thư mục> → bản xem thử (link claude.ai): inline CSS/JS, link tới index.html, không iframe
+const PREVIEW = process.env.ARTIFACT_OUT || '';
+const OUT = PREVIEW || join(__dir, '..', 'site');
 const urls = [];
 
 // ảnh thật: src/images/<slug>/*.{jpg,png,webp}
@@ -179,7 +181,7 @@ ${leadForm()}
   <a href="#dang-ky" class="dock-main">Nhận bảng giá</a>
 </div>
 <div class="toast" role="status" aria-live="polite"></div>
-<script>window.__SITE=${JSON.stringify({ email: SITE.email, endpoint: SITE.formEndpoint, zalo: SITE.zalo })}</script>
+<script>window.__SITE=${JSON.stringify({ email: SITE.email, endpoint: SITE.formEndpoint, zalo: SITE.zalo, preview: !!PREVIEW })}</script>
 <script src="${R}assets/main.js" defer></script>
 <script src="${R}assets/extras.js" defer></script>
 </body>
@@ -495,7 +497,7 @@ function project(p) {
     <p class="reveal">Địa chỉ: <strong>${esc(p.address)}</strong>.</p>
     ${p.connect ? `<ul class="conn" id="ket-noi">${p.connect.map(([k, v], i) => `<li class="reveal" style="--d:${i * 60}ms"><span>${esc(k)}</span><b>${esc(v)}</b></li>`).join('')}</ul>
     <p class="small muted">* Thời gian di chuyển tham khảo, phụ thuộc giao thông thực tế.</p>` : ''}
-    <div class="map reveal"><iframe title="Bản đồ ${esc(p.name)}" loading="lazy" referrerpolicy="no-referrer-when-downgrade" src="https://maps.google.com/maps?q=${encodeURIComponent(p.name + ', ' + p.address)}&z=14&output=embed"></iframe></div>
+    ${PREVIEW ? `<a class="map map-link reveal" href="https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(p.name + ', ' + p.address)}" target="_blank" rel="noopener">${masterplanFn(p)}<span class="map-btn">Mở vị trí ${esc(p.name)} trên Google Maps ↗</span></a>` : `<div class="map reveal"><iframe title="Bản đồ ${esc(p.name)}" loading="lazy" referrerpolicy="no-referrer-when-downgrade" src="https://maps.google.com/maps?q=${encodeURIComponent(p.name + ', ' + p.address)}&z=14&output=embed"></iframe></div>`}
 
     ${p.timeline ? `<h2 class="h3" id="tien-do">Tiến độ & các mốc quan trọng</h2>
     <ol class="tline">${p.timeline.map(([t, e], i) => `<li class="reveal" style="--d:${i * 80}ms"><time>${esc(t)}</time><p>${esc(e)}</p></li>`).join('')}</ol>` : ''}
@@ -661,7 +663,30 @@ ${faqBlock(faqs, 'Hỏi đáp về vay mua nhà')}`,
 }
 
 // ---------- write ----------
+const readAsset = (n) => readFileSync(join(__dir, 'assets', n), 'utf8');
+function previewize(rel, html) {
+  if (!rel.endsWith('.html')) return html;
+  // inline CSS/JS + favicon
+  html = html.replace(/<link rel="stylesheet" href="[^"]*assets\/style\.css">/, () => `<style>${readAsset('style.css')}</style>`);
+  html = html.replace(/<script src="[^"]*assets\/(main|extras)\.js" defer><\/script>/g, (_, n) => `<script>${readAsset(n + '.js')}</script>`);
+  html = html.replace(/<link rel="icon" href="[^"]*" type="image\/svg\+xml">/, () => `<link rel="icon" href="data:image/svg+xml;base64,${Buffer.from(readAsset('favicon.svg')).toString('base64')}">`);
+  // link thư mục → index.html
+  html = html.replace(/(href|action)="([^"]*)"/g, (m, attr, v) => {
+    if (/^(https?:|mailto:|tel:|data:|javascript:|#)/.test(v) || v === '') return m;
+    const [path, hash] = v.split('#');
+    let np = path;
+    if (path === '' || path === './') np = 'index.html';
+    else if (path.endsWith('/')) np = path + 'index.html';
+    return `${attr}="${np}${hash !== undefined ? '#' + hash : ''}"`;
+  });
+  if (rel === 'index.html') {
+    html = html.replace(/<!doctype html>\s*<html[^>]*>\s*<head>/i, '').replace(/<\/head>\s*<body>/i, '').replace(/<\/body>\s*<\/html>\s*$/i, '');
+    html = html.replace(/<title>[^<]*<\/title>/, `<title>${SITE.name}</title>`);
+  }
+  return html;
+}
 function write(rel, content) {
+  if (PREVIEW) content = previewize(rel, content);
   const f = join(OUT, rel);
   mkdirSync(dirname(f), { recursive: true });
   writeFileSync(f, content);

@@ -126,11 +126,12 @@ const ROSTER = [
   { dept: "mkt", name: "Tú", role: "Designer", hair: "#ff9f6b", shirt: "#f58cb8" },
   { dept: "mkt", name: "Hà", role: "Content Writer", hair: "#2b2b3a", shirt: "#e8548f", long: true },
   // Phòng Affiliate: agent AI thật (Claude), mỗi người một vai trong quy trình làm video TikTok
-  { dept: "aff", name: "Ngọc", role: "AI Biên kịch", aiRole: "script", hair: "#c46a3a", shirt: "#3cc4b2", long: true },
-  { dept: "aff", name: "Hiếu", role: "AI Kiểm duyệt", aiRole: "audit", hair: "#1e1e28", shirt: "#0e8a7c" },
-  { dept: "aff", name: "Quân", role: "AI Thiết kế ảnh", aiRole: "image", hair: "#2b2b3a", shirt: "#12a594" },
-  { dept: "aff", name: "Tâm", role: "AI Dựng video", aiRole: "video", hair: "#3a2a1a", shirt: "#18b8a5" },
-  { dept: "aff", name: "Thảo", role: "AI Đăng TikTok", aiRole: "post", hair: "#5a3220", shirt: "#0b7a6e", long: true },
+  // Thứ tự bàn = thứ tự quy trình: kịch bản -> ảnh -> audit -> video -> đăng
+  { dept: "aff", name: "Ngọc", role: "Content · Kịch bản", aiRole: "script", hair: "#c46a3a", shirt: "#3cc4b2", long: true },
+  { dept: "aff", name: "Quân", role: "Tạo ảnh · ChatGPT", aiRole: "image", hair: "#2b2b3a", shirt: "#12a594" },
+  { dept: "aff", name: "Hiếu", role: "Audit nội dung", aiRole: "audit", hair: "#1e1e28", shirt: "#0e8a7c" },
+  { dept: "aff", name: "Tâm", role: "Video · Flow", aiRole: "video", hair: "#3a2a1a", shirt: "#18b8a5" },
+  { dept: "aff", name: "Thảo", role: "Đăng TikTok", aiRole: "post", hair: "#5a3220", shirt: "#0b7a6e", long: true },
   { dept: "sales", name: "Nam", role: "Trưởng Kinh doanh", hair: "#1e1e28", shirt: "#f2a03d" },
   { dept: "sales", name: "Trang", role: "Account Manager", hair: "#5a3220", shirt: "#f7b65e", long: true },
   { dept: "sales", name: "Bảo", role: "Sales Executive", hair: "#3a2a1a", shirt: "#e48d22" },

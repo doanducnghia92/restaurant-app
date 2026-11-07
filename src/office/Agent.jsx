@@ -166,7 +166,10 @@ export default memo(function Agent({ agent, selected, onSelect }) {
           <div ref={barEl} className="prog" style={{ display: "none" }}>
             <div ref={fillEl} style={{ background: accent }} />
           </div>
-          <div className={`name ${selected ? "sel" : ""}`} style={{ "--c": accent }}>{agent.name}</div>
+          <div className={`name ${selected ? "sel" : ""}`} style={{ "--c": accent }}>
+            <b>{agent.name}</b>
+            <span className="role">{agent.role}</span>
+          </div>
         </div>
       </Html>
     </group>

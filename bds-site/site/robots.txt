@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://www.duanphianam.vn/sitemap.xml

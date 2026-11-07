@@ -42,26 +42,26 @@ function art(p, { w = 800, h = 560, cls = '' } = {}) {
     else if (r() > 0.6) towers += `<rect x="${(x + tw / 2 - 1).toFixed(1)}" y="${(y - 30).toFixed(1)}" width="2" height="30" fill="${ac}" opacity=".7"/>`;
     // windows
     for (let wy = y + 10; wy < horizon - 8; wy += 14) {
-      if (r() > 0.55) towers += `<rect x="${(x + 6).toFixed(1)}" y="${wy.toFixed(1)}" width="${(tw - 12).toFixed(1)}" height="2" fill="${ac}" opacity="${(0.15 + r() * 0.5).toFixed(2)}"/>`;
+      if (r() > 0.55) towers += `<rect x="${(x + 6).toFixed(1)}" y="${wy.toFixed(1)}" width="${(tw - 12).toFixed(1)}" height="2" fill="#fff6e0" opacity="${(0.25 + r() * 0.5).toFixed(2)}"/>`;
     }
     x += tw + 4 + r() * 18;
   }
   const sunX = (0.2 + r() * 0.6) * w;
   return `<svg class="art ${cls}" viewBox="0 0 ${w} ${h}" preserveAspectRatio="xMidYMid slice" role="img" aria-label="Phối cảnh minh hoạ ${esc(p.name)}" xmlns="http://www.w3.org/2000/svg">
 <defs>
-<linearGradient id="s${id}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="${c1}"/><stop offset=".75" stop-color="${c2}"/><stop offset="1" stop-color="${ac}" stop-opacity=".55"/></linearGradient>
-<linearGradient id="t${id}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#0b0b0d" stop-opacity=".55"/><stop offset="1" stop-color="#0b0b0d" stop-opacity=".95"/></linearGradient>
-<linearGradient id="w${id}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="${c2}" stop-opacity=".7"/><stop offset="1" stop-color="#050507"/></linearGradient>
-<radialGradient id="g${id}"><stop offset="0" stop-color="${ac}"/><stop offset=".4" stop-color="${ac}" stop-opacity=".35"/><stop offset="1" stop-color="${ac}" stop-opacity="0"/></radialGradient>
+<linearGradient id="s${id}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="${c2}" stop-opacity=".55"/><stop offset=".7" stop-color="#fbf6ec"/><stop offset="1" stop-color="${ac}" stop-opacity=".7"/></linearGradient>
+<linearGradient id="t${id}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="${c2}" stop-opacity=".75"/><stop offset="1" stop-color="${c1}"/></linearGradient>
+<linearGradient id="w${id}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="${c2}" stop-opacity=".45"/><stop offset="1" stop-color="${c1}" stop-opacity=".85"/></linearGradient>
+<radialGradient id="g${id}"><stop offset="0" stop-color="#fff"/><stop offset=".35" stop-color="${ac}" stop-opacity=".55"/><stop offset="1" stop-color="${ac}" stop-opacity="0"/></radialGradient>
 </defs>
-<rect width="${w}" height="${h}" fill="url(#s${id})"/>
+<rect width="${w}" height="${h}" fill="#fbf7ef"/><rect width="${w}" height="${h}" fill="url(#s${id})"/>
 <circle class="art-sun" cx="${sunX.toFixed(0)}" cy="${(horizon - 60).toFixed(0)}" r="160" fill="url(#g${id})"/>
-<circle cx="${sunX.toFixed(0)}" cy="${(horizon - 60).toFixed(0)}" r="34" fill="${ac}" opacity=".9"/>
+<circle cx="${sunX.toFixed(0)}" cy="${(horizon - 60).toFixed(0)}" r="34" fill="#fffaf0" opacity=".95"/>
 <g class="art-city">${towers}</g>
 <rect y="${horizon}" width="${w}" height="${h - horizon}" fill="url(#w${id})"/>
-<g opacity=".25" transform="translate(0 ${horizon * 2}) scale(1 -1)">${towers}</g>
-<rect y="${horizon}" width="${w}" height="${h - horizon}" fill="url(#w${id})" opacity=".6"/>
-<g stroke="${ac}" stroke-opacity=".5" stroke-width="1.2">${Array.from({ length: 6 }, (_, i) => `<line x1="${(sunX - 60 + r() * 30).toFixed(0)}" x2="${(sunX + 40 + r() * 40).toFixed(0)}" y1="${(horizon + 12 + i * 12).toFixed(0)}" y2="${(horizon + 12 + i * 12).toFixed(0)}"/>`).join('')}</g>
+<g opacity=".18" transform="translate(0 ${horizon * 2}) scale(1 -1)">${towers}</g>
+<rect y="${horizon}" width="${w}" height="${h - horizon}" fill="url(#w${id})" opacity=".35"/>
+<g stroke="#fff" stroke-opacity=".6" stroke-width="1.2">${Array.from({ length: 6 }, (_, i) => `<line x1="${(sunX - 60 + r() * 30).toFixed(0)}" x2="${(sunX + 40 + r() * 40).toFixed(0)}" y1="${(horizon + 12 + i * 12).toFixed(0)}" y2="${(horizon + 12 + i * 12).toFixed(0)}"/>`).join('')}</g>
 </svg>`;
 }
 
@@ -99,11 +99,11 @@ ${keywords.length ? `<meta name="keywords" content="${esc(keywords.join(', '))}"
 <meta property="og:url" content="${canonical}">
 <meta property="og:image" content="${abs('assets/og.svg')}">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="theme-color" content="#0b0b0d">
+<meta name="theme-color" content="#f8f5ef">
 <meta name="geo.region" content="VN-SG"><meta name="geo.placename" content="Hồ Chí Minh">
 <link rel="icon" href="${R}assets/favicon.svg" type="image/svg+xml">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@300;400;500;600&family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Playfair+Display:wght@400;500;600&display=swap">
 <link rel="stylesheet" href="${R}assets/style.css">
 ${jsonld.map(ld).join('\n')}
 </head>

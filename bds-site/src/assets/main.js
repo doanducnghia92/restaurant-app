@@ -195,12 +195,12 @@
         if (p.x < -10) p.x = W + 10; if (p.x > W + 10) p.x = -10;
         const tw = p.a * (0.6 + Math.sin(p.t * 2) * 0.4);
         ctx.beginPath(); ctx.arc(p.x, p.y, p.r, 0, 6.283);
-        ctx.fillStyle = `rgba(233,211,160,${tw})`; ctx.shadowColor = 'rgba(233,211,160,.8)'; ctx.shadowBlur = 6; ctx.fill();
+        ctx.fillStyle = `rgba(176,138,76,${tw})`; ctx.shadowColor = 'rgba(196,160,106,.6)'; ctx.shadowBlur = 6; ctx.fill();
       }
       ctx.shadowBlur = 0;
       for (const p of pts) {
         const dx = p.x - pointer.x, dy = p.y - pointer.y, d = Math.hypot(dx, dy);
-        if (d < 170) { ctx.strokeStyle = `rgba(200,169,106,${(1 - d / 170) * 0.35})`; ctx.lineWidth = 0.6; ctx.beginPath(); ctx.moveTo(p.x, p.y); ctx.lineTo(pointer.x, pointer.y); ctx.stroke(); }
+        if (d < 170) { ctx.strokeStyle = `rgba(168,132,74,${(1 - d / 170) * 0.3})`; ctx.lineWidth = 0.6; ctx.beginPath(); ctx.moveTo(p.x, p.y); ctx.lineTo(pointer.x, pointer.y); ctx.stroke(); }
       }
       requestAnimationFrame(draw);
     }

@@ -22,3 +22,7 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+# Cầu nối văn phòng (mã phòng bí mật, chỉ nằm trên máy chạy bot)
+office_bridge.json
+.firebase/

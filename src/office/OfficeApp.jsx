@@ -8,6 +8,9 @@ import Agent from "./Agent";
 import { ZONES, ZONE_LIST, FLOOR_W, FLOOR_D } from "./layout";
 import { AffiliateStudio, STEPS } from "./ai/affiliate";
 import AiPanel, { AiMini } from "./AiPanel";
+import LivePanel from "./LivePanel";
+import { liveRoom } from "./live/feed";
+import { LiveSession } from "./live/session";
 import "./office.css";
 
 // Trạng thái camera dùng chung giữa UI và vòng render
@@ -126,6 +129,7 @@ function ChatLog({ sim, onPick }) {
                 {l.to && <span className="to"> → {l.to}</span>}
                 {l.kind === "meeting" && <span className="to"> · 📋 họp</span>}
                 {l.kind === "ai" && <span className="ai-tag">🤖 AI thật</span>}
+                {l.kind === "tg" && <span className="ai-tag tg-tag">📱 Telegram</span>}
                 <span className="time">{l.clock}</span>
               </div>
               <div className="log-text">{l.text}</div>
@@ -196,7 +200,7 @@ function AgentCard({ sim, agent, following, onFollow, onClose, toast, onOpenAi }
         <div className="bar"><i style={{ width: `${agent.progress * 100}%`, background: z.accent }} /></div>
       )}
       <div className="card-stats">
-        {agent.real ? "🤖 Agent AI thật (Claude) — làm việc theo brief anh giao" : `💬 ${agent.stats.talks} lần trao đổi · ✅ ${agent.stats.tasks} việc xong`}
+        {agent.real ? "🤖 Agent AI — làm việc theo việc anh giao" : `💬 ${agent.stats.talks} lần trao đổi · ✅ ${agent.stats.tasks} việc xong`}
       </div>
       <div className="card-actions">
         <button onClick={onFollow} className={following ? "on" : ""}>{following ? "🎥 Đang theo" : "🎥 Theo dõi"}</button>
@@ -222,9 +226,16 @@ export default function OfficeApp() {
   const [, force] = useState(0);
   const [aiView, setAiView] = useState("closed"); // closed | open | mini
   const studio = useMemo(() => new AffiliateStudio(sim), [sim]);
+  // ?room=<mã phòng> -> chế độ LIVE: hiển thị pipeline aff-do-nam thật qua cầu nối Telegram/Firestore
+  const live = useMemo(() => {
+    const room = liveRoom();
+    return room ? new LiveSession(sim, room) : null;
+  }, [sim]);
   useEffect(() => {
-    studio.init();
-  }, [studio]);
+    if (live) live.start();
+    else studio.init();
+    return () => live?.stop?.();
+  }, [studio, live]);
   useTick(400);
 
   const portrait = typeof window !== "undefined" && window.innerHeight > window.innerWidth;
@@ -311,7 +322,7 @@ export default function OfficeApp() {
       <header className="topbar">
         <div className="brand">🏢 <span>Văn phòng Agent</span></div>
         <div className="clock">Ngày {sim.day} · {fmtClock(sim.clock)}</div>
-        <div className="kpi">📁 {activeProjects} · ✅ {sim.done} · 💰 {fmtMoney(sim.revenue)} · 🎬 {studio.list().filter((j) => j.status === "ready" || j.status === "posted").length} video AI</div>
+        <div className="kpi">📁 {activeProjects} · ✅ {sim.done} · 💰 {fmtMoney(sim.revenue)} {live ? ` · 📱 Live (${live.items.length} tin)` : ` · 🎬 ${studio.list().filter((j) => j.status === "ready" || j.status === "posted").length} video AI`}</div>
         <div className="speed">
           <button className={sim.paused ? "on" : ""} onClick={() => setSpeed(0)} aria-label="Tạm dừng">{sim.paused ? "▶" : "❚❚"}</button>
           {[1, 2, 4].map((s) => (
@@ -331,16 +342,23 @@ export default function OfficeApp() {
       <div className="fabs">
         <button onClick={() => { sim.cmdProject(); toast("📩 Có khách hàng mới gửi yêu cầu!"); }} title="Dự án mới">📩<small>Dự án</small></button>
         <button onClick={() => toast(sim.cmdMeeting() ? "📣 Sếp triệu tập họp!" : "Chưa họp được (sếp bận / đang họp)")} title="Họp">📣<small>Họp</small></button>
-        <button className="fab-ai" onClick={() => setAiView("open")} title="Phòng Affiliate AI">🤖<small>AI</small></button>
+        {live ? (
+          <button className="fab-ai" onClick={() => setAiView("open")} title="Telegram phòng Affiliate">📱<small>Live</small></button>
+        ) : (
+          <button className="fab-ai" onClick={() => setAiView("open")} title="Phòng Affiliate AI">🤖<small>AI</small></button>
+        )}
         <button onClick={() => { setTouchMode((m) => (m === "pan" ? "rotate" : "pan")); toast(touchMode === "pan" ? "1 ngón: xoay camera" : "1 ngón: kéo bản đồ"); }} title="Chế độ chạm">
           {touchMode === "pan" ? "✋" : "🔄"}<small>{touchMode === "pan" ? "Kéo" : "Xoay"}</small>
         </button>
       </div>
 
-      {aiView === "open" && (
+      {aiView === "open" && !live && (
         <AiPanel studio={studio} toast={toast} onClose={() => setAiView("closed")} onMinimize={() => setAiView("mini")} onWatch={watchJob} />
       )}
-      {aiView === "mini" && <AiMini studio={studio} onOpen={() => setAiView("open")} />}
+      {aiView === "mini" && !live && <AiMini studio={studio} onOpen={() => setAiView("open")} />}
+      {aiView === "open" && live && (
+        <LivePanel live={live} onClose={() => setAiView("closed")} onMinimize={() => setAiView("closed")} onPick={(id) => { setAiView("closed"); pick(id); }} />
+      )}
 
       {msg && <div className="toast">{msg}</div>}
 

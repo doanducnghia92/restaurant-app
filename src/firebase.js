@@ -48,3 +48,4 @@ export function storageSubscribe(key, callback) {
     }
   });
 }
+export { db };

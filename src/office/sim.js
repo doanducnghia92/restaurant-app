@@ -323,7 +323,7 @@ export class OfficeSim {
         const listener = who === 0 ? b : a;
         const dur = lineDur(text);
         this.say(speaker, text.length > 110 ? `${text.slice(0, 108)}…` : text, dur + 0.2);
-        this.log(speaker, text, act.raw ? "ai" : "talk", listener);
+        if (!act.silent) this.log(speaker, text, act.raw ? "ai" : "talk", listener);
         act.left = dur;
         return false;
       }
@@ -335,12 +335,12 @@ export class OfficeSim {
   }
 
   // ---------- điều phối ----------
-  visit(a, b, lines, ctx, onDone, why, raw = false) {
+  visit(a, b, lines, ctx, onDone, why, raw = false, silent = false) {
     b.locked = true;
     const full = { A: a.name, B: b.name, ...ctx };
     a.queue.push(
       { t: "go", spot: visitorSpot(b.seat), status: why || `Đi gặp ${b.name}` },
-      { t: "talk", partner: b, lines, ctx: full, onDone, raw },
+      { t: "talk", partner: b, lines, ctx: full, onDone, raw, silent },
     );
     this.touch();
   }
@@ -583,7 +583,7 @@ export class OfficeSim {
     if (!a.locked) a.status = a.aiTask || "Chờ việc";
     a.progress = a.aiTask ? a.aiProgress ?? null : null;
     if (!a.aiTask && this.t > a.nextThought) {
-      this.say(a, pick(["💤", "☕?", "Có brief mới chưa nhỉ? 👀", "🎧"]), 2.2);
+      this.say(a, pick(["💤", "☕", "👀", "🎧"]), 2.2);
       a.nextThought = this.t + rand(25, 50);
     }
   }
@@ -604,9 +604,9 @@ export class OfficeSim {
   }
 
   // Bàn giao thật: A đi tới bàn B, nói tóm tắt kết quả, B xác nhận. Resolve khi nói xong.
-  aiHandoff(fromId, toId, lines) {
+  aiHandoff(fromId, toId, lines, { silent = false } = {}) {
     return new Promise((resolve) => {
-      this.aiPending.push({ a: this.byId[fromId], b: this.byId[toId], lines, resolve });
+      this.aiPending.push({ a: this.byId[fromId], b: this.byId[toId], lines, resolve, silent });
     });
   }
 
@@ -637,7 +637,7 @@ export class OfficeSim {
       const bFree = !b.locked && !b.cur && !b.queue.length && !b.inTalk && b.at === "home";
       if (!aFree || !bFree) return true;
       a.stayAway = false;
-      this.visit(a, b, h.lines, {}, h.resolve, `Bàn giao cho ${b.name}`, true);
+      this.visit(a, b, h.lines, {}, h.resolve, `Bàn giao cho ${b.name}`, true, h.silent);
       return false;
     });
   }

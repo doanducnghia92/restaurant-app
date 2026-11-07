@@ -26,3 +26,4 @@ dist-ssr
 # Cầu nối văn phòng (mã phòng bí mật, chỉ nằm trên máy chạy bot)
 office_bridge.json
 .firebase/
+__pycache__/

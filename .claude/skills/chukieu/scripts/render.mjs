@@ -67,7 +67,17 @@ const fu = p => pathToFileURL(p).href;
 let fontCSS = fonts.free.map(f => `<link rel="stylesheet" href="${fu(path.join(SKILL, 'fonts/free', f))}">`).join('\n');
 const userDir = path.join(SKILL, 'fonts/user');
 const userFaces = fs.existsSync(userDir) ? fs.readdirSync(userDir).filter(f => /\.(ttf|otf|woff2?)$/i.test(f)) : [];
-fontCSS += '<style>' + userFaces.map(f => `@font-face{font-family:"${f.replace(/\.[^.]+$/, '')}";src:url("${fu(path.join(userDir, f))}");}`).join('\n') + '</style>';
+// Mỗi file đăng ký 2 lần: (1) family = tên file ("SVN-Gilroy Black"),
+// (2) family gốc + độ đậm/nghiêng suy ra từ tên ("SVN-Gilroy", 950) để dùng font-weight bình thường.
+const WEIGHTS = { thin: 100, hairline: 100, xlight: 200, extralight: 200, ultralight: 200, light: 300, regular: 400, book: 400, normal: 400,
+  medium: 500, semibold: 600, demibold: 600, bold: 700, xbold: 800, extrabold: 800, ultrabold: 800, heavy: 900, black: 950 };
+fontCSS += '<style>' + userFaces.map(f => {
+  const stem = f.replace(/\.[^.]+$/, ''), url = fu(path.join(userDir, f));
+  let css = `@font-face{font-family:"${stem}";src:url("${url}");}`;
+  const m = stem.match(/^(.*?)[\s_-]+((?:thin|hairline|x?light|extralight|ultralight|regular|book|normal|medium|semibold|demibold|bold|x?bold|extrabold|ultrabold|heavy|black)?)\s*(italic|oblique)?$/i);
+  if (m && (m[2] || m[3])) css += `@font-face{font-family:"${m[1]}";src:url("${url}");font-weight:${WEIGHTS[(m[2] || 'regular').toLowerCase()] || 400};font-style:${m[3] ? 'italic' : 'normal'};}`;
+  return css;
+}).join('\n') + '</style>';
 const bg = args.board || args.still ? (args.bg || '#0b0b0b') : 'transparent';
 const html = `<!doctype html><html><head><meta charset="utf-8">${fontCSS}
 <style>html,body{margin:0;padding:0;background:${bg};overflow:hidden}</style></head><body>

@@ -1,0 +1,112 @@
+{
+  "_note": "Mỗi vai trò có một danh sách font (stack). Trình duyệt dùng font đầu tiên có trên máy: font cài trong máy (Windows/macOS) hoặc file trong fonts/user/ (tên family = tên file, bỏ đuôi). Font miễn phí cuối danh sách là phương án dự phòng, có sẵn trong fonts/free/. Muốn dùng font của anh: sửa tên ở đầu stack cho đúng tên font trong máy, hoặc chép file .ttf/.otf vào fonts/user/. File trong fonts/user/ có tên dạng 'Họ Độ-đậm Italic' (vd 'SVN-Gilroy Black Italic.otf') sẽ được gộp thành family 'SVN-Gilroy' với đúng độ đậm (Thin 100 … Bold 700, XBold 800, Heavy 900, Black 950).",
+  "roles": {
+    "R1": {
+      "desc": "Sans gọn — chữ dẫn, chữ phụ",
+      "stack": [
+        "SVN-Gilroy",
+        "Gilroy",
+        "SF Pro Display",
+        "Be Vietnam Pro"
+      ],
+      "weight": 600
+    },
+    "R2": {
+      "desc": "In hoa hẹp đậm — chữ chính dòng B",
+      "stack": [
+        "UTM Bebas",
+        "SVN-Bebas Neue",
+        "Bebas Neue",
+        "Anton"
+      ],
+      "weight": 400,
+      "upper": true
+    },
+    "R3": {
+      "desc": "Sans tròn rất đậm — chữ chính, số",
+      "stack": [
+        "SVN-Gilroy",
+        "SVN-Gilroy Black",
+        "Gilroy",
+        "Montserrat"
+      ],
+      "weight": 950
+    },
+    "R4": {
+      "desc": "Script chữ ký mảnh — chữ dẫn chéo (Luôn, Chỉ từ, Khởi công)",
+      "stack": [
+        "iCiel Brittany Signature",
+        "Brittany Signature",
+        "SVN-Brittany Signature",
+        "Ephesis"
+      ],
+      "weight": 400
+    },
+    "R5": {
+      "desc": "Script trang trí đuôi lượn — chữ chính dòng A",
+      "stack": [
+        "SVN-Great Vibes",
+        "Great Vibes",
+        "Pinyon Script"
+      ],
+      "weight": 400
+    },
+    "R6": {
+      "desc": "Serif nghiêng — chữ chính / chữ phụ",
+      "stack": [
+        "SVN-Playfair Display",
+        "Playfair Display"
+      ],
+      "weight": 700,
+      "italic": true
+    },
+    "R7": {
+      "desc": "Serif in hoa La Mã — VIEW SÔNG, tên dự án sang trọng",
+      "stack": [
+        "UTM Trajan Pro Bold",
+        "DVN Trajan",
+        "Trajan Pro",
+        "Playfair Display"
+      ],
+      "weight": 400
+    },
+    "R8": {
+      "desc": "Script nét cọ dày — Suối tiên, Đáng sống, Sài gòn",
+      "stack": [
+        "SVN-Holiday",
+        "Holiday",
+        "Great Vibes"
+      ],
+      "weight": 400
+    },
+    "R9": {
+      "desc": "Sans nhân văn đậm — câu phụ đậm (bất cứ lúc nào, Thanh toán đủ)",
+      "stack": [
+        "UTM Alexander",
+        "SVN-Gilroy",
+        "Be Vietnam Pro"
+      ],
+      "weight": 400
+    }
+  },
+  "free": [
+    "be-vietnam-pro/400.css",
+    "be-vietnam-pro/600.css",
+    "be-vietnam-pro/700.css",
+    "be-vietnam-pro/800.css",
+    "be-vietnam-pro/900.css",
+    "anton/400.css",
+    "oswald/700.css",
+    "montserrat/700.css",
+    "montserrat/800.css",
+    "montserrat/900.css",
+    "montserrat/800-italic.css",
+    "montserrat/900-italic.css",
+    "ephesis/400.css",
+    "great-vibes/400.css",
+    "pinyon-script/400.css",
+    "playfair-display/400-italic.css",
+    "playfair-display/700-italic.css",
+    "moon-dance/400.css"
+  ]
+}

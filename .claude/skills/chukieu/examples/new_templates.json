@@ -1,0 +1,164 @@
+{
+ "canvas": {
+  "w": 1080,
+  "h": 1920
+ },
+ "fps": 30,
+ "clusters": [
+  {
+   "id": "CK-21",
+   "template": "CK-21",
+   "t_in": 0.3,
+   "t_out": 3.1,
+   "texts": {
+    "lead": "chỉ có một",
+    "initial": "C",
+    "hero": "ơ hội",
+    "sub": "đầu tư"
+   }
+  },
+  {
+   "id": "CK-22",
+   "template": "CK-22",
+   "t_in": 3.3,
+   "t_out": 6.1,
+   "texts": {
+    "num": "1",
+    "hero": "BẤT ĐỘNG SẢN",
+    "sub": "Đáng sống"
+   }
+  },
+  {
+   "id": "CK-23",
+   "template": "CK-23",
+   "t_in": 6.3,
+   "t_out": 9.1,
+   "texts": {
+    "lead": "Anh Chị",
+    "hero": "Có Tin",
+    "sub": "được không?"
+   }
+  },
+  {
+   "id": "CK-24",
+   "template": "CK-24",
+   "t_in": 9.3,
+   "t_out": 12.1,
+   "texts": {
+    "hero": "SINH TIỀN",
+    "sub": "Mỗi Tháng",
+    "icon": "money",
+    "icon2": "money"
+   }
+  },
+  {
+   "id": "CK-25",
+   "template": "CK-25",
+   "t_in": 12.3,
+   "t_out": 15.1,
+   "texts": {
+    "lead": "Căn hộ",
+    "hero": "500.000.000",
+    "sub": "view sông",
+    "icon": "star"
+   }
+  },
+  {
+   "id": "CK-26",
+   "template": "CK-26",
+   "t_in": 15.3,
+   "t_out": 18.1,
+   "texts": {
+    "lead": "Dòng tiền",
+    "hero": "ĐẦU TƯ BĐS",
+    "icon": "money"
+   }
+  },
+  {
+   "id": "CK-27",
+   "template": "CK-27",
+   "t_in": 18.3,
+   "t_out": 21.1,
+   "texts": {
+    "hero": "550 TỶ",
+    "sub": "sở hữu ngay"
+   }
+  },
+  {
+   "id": "CK-28",
+   "template": "CK-28",
+   "t_in": 21.3,
+   "t_out": 24.1,
+   "texts": {
+    "hero": "Vị Trí Vàng",
+    "sub": "Kết nối mọi giá trị"
+   }
+  },
+  {
+   "id": "CK-29",
+   "template": "CK-29",
+   "t_in": 24.3,
+   "t_out": 27.1,
+   "texts": {
+    "hero": "The Global",
+    "sub": "Khởi công",
+    "pct": "90%"
+   }
+  },
+  {
+   "id": "CK-30",
+   "template": "CK-30",
+   "t_in": 27.3,
+   "t_out": 30.1,
+   "texts": {
+    "lead": "Nếu có",
+    "num": "30s",
+    "line": "tôi sẽ cho bạn biết",
+    "hero": "VÌ SAO",
+    "sub": "căn này đáng xem"
+   }
+  },
+  {
+   "id": "CK-14v",
+   "template": "CK-14",
+   "palette": "ice",
+   "t_in": 30.3,
+   "t_out": 33.1,
+   "texts": {
+    "lead": "điểm đến của",
+    "hero": "THỊNH VƯỢNG",
+    "ghost": "$$$"
+   }
+  },
+  {
+   "id": "CK-16v",
+   "template": "CK-16",
+   "palette": "gold",
+   "palette2": "gold",
+   "t_in": 33.3,
+   "t_out": 36.099999999999994,
+   "texts": {
+    "lead": "Ra mắt",
+    "hero": "VINHOMES CITY",
+    "badge": "GIAI ĐOẠN 2"
+   },
+   "layers": {
+    "swoosh3": {
+     "shape": "bar",
+     "width": 1.0
+    }
+   }
+  },
+  {
+   "id": "CK-31",
+   "template": "CK-31",
+   "t_in": 36.3,
+   "t_out": 39.1,
+   "texts": {
+    "hero": "VIEW SÔNG",
+    "badge": "Tầm nhìn đắt giá",
+    "icon": "money"
+   }
+  }
+ ]
+}

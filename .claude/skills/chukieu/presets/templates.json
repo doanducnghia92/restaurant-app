@@ -1,138 +1,1712 @@
 {
-  "_note": "Đơn vị kích thước = H (cỡ chữ gốc của cụm). at = [đích, điểm-đích, điểm-mình, dx, dy] (dx, dy theo H). Điểm: tl tc tr ml mc mr bl bc br. Lớp đầu tiên là gốc. Lớp có slot không được điền chữ sẽ bị bỏ qua. fill: white | grey | p1 | p2 | #hex | img. role: R1..R6 (xem fonts.json).",
-  "CK-01": { "style": "A", "name": "Số khổng lồ xếp chồng", "example": {"num": "5", "hero": "hiệu ứng", "sub": "dân edit nên biết"},
-    "layers": [
-      { "slot": "num", "role": "R3", "size": 1.9, "fill": "p1", "glow": 0.9, "anim": "A01" },
-      { "slot": "hero", "role": "R3", "size": 0.6, "weight": 800, "italic": true, "fill": "white", "at": ["num", "mc", "bl", -0.1, 0.12], "anim": "A02" },
-      { "slot": "sub", "role": "R6", "size": 0.3, "weight": 400, "fill": "p1", "at": ["hero", "bl", "tl", 0.02, -0.04], "anim": "A01" } ] },
-
-  "CK-02": { "style": "A", "name": "Bậc thang 3 tầng", "example": {"lead": "nâng", "mid": "trình", "hero": "tư duy"},
-    "layers": [
-      { "slot": "lead", "role": "R1", "size": 0.36, "fill": "grey", "anim": "A02" },
-      { "slot": "mid", "role": "R1", "size": 0.55, "weight": 700, "fill": "white", "at": ["lead", "br", "tl", -0.2, -0.12], "anim": "A02" },
-      { "slot": "hero", "role": "R6", "size": 0.85, "weight": 400, "fill": "p1", "at": ["mid", "br", "tl", -0.25, -0.08], "anim": "A01" } ] },
-
-  "CK-03": { "style": "A", "name": "Kẹp giữa", "example": {"lead": "những", "lead2": "hiệu", "hero": "ứng", "sub": "siêu", "hero2": "hot"},
-    "layers": [
-      { "slot": "hero", "role": "R6", "size": 1.0, "weight": 700, "fill": "p1", "anim": "A01" },
-      { "slot": "lead", "role": "R1", "size": 0.3, "fill": "white", "at": ["hero", "tl", "bl", -0.12, 0.12], "anim": "A02" },
-      { "slot": "lead2", "role": "R1", "size": 0.3, "fill": "white", "at": ["hero", "tr", "bl", -0.05, 0.22], "anim": "A02" },
-      { "slot": "sub", "role": "R1", "size": 0.28, "fill": "grey", "at": ["hero", "bl", "tr", 0.05, -0.3], "anim": "A02" },
-      { "slot": "hero2", "role": "R6", "size": 0.85, "weight": 700, "fill": "p1", "at": ["hero", "bc", "tl", -0.1, -0.3], "anim": "A01" } ] },
-
-  "CK-04": { "style": "A", "name": "Dẫn + script", "example": {"lead": "sử dụng AI", "hero": "của gemini"},
-    "layers": [
-      { "slot": "lead", "role": "R1", "size": 0.38, "fill": "white", "anim": "A02" },
-      { "slot": "hero", "role": "R5", "size": 1.0, "fill": "p1", "glow": 1.0, "at": ["lead", "bc", "tc", 0.1, -0.3], "anim": "A03" } ] },
-
-  "CK-05": { "style": "A", "name": "Sans đậm + script đè dưới", "example": {"lead": "nếu bạn", "lead2": "đang tìm", "hero": "không gian", "sub": "Sống lý tưởng"},
-    "layers": [
-      { "slot": "hero", "role": "R3", "size": 1.0, "weight": 800, "fill": "p1", "anim": "A01" },
-      { "slot": "lead", "role": "R1", "size": 0.28, "fill": "white", "at": ["hero", "tc", "bl", 0.02, 0.08], "anim": "A02" },
-      { "slot": "lead2", "role": "R1", "size": 0.28, "fill": "white", "at": ["lead", "br", "bl", 0.3, 0], "anim": "A02" },
-      { "slot": "sub", "role": "R5", "size": 0.62, "fill": "white", "at": ["hero", "bl", "tl", 0.05, -0.42], "anim": "A03" } ] },
-
-  "CK-06": { "style": "A", "name": "Serif + các từ rải bên dưới", "example": {"lead": "khép lại", "hero": "hành trình", "beads": "bằng giá trị thật"},
-    "layers": [
-      { "slot": "hero", "role": "R6", "size": 1.0, "weight": 400, "fill": "p1", "glow": 1.0, "anim": "A01" },
-      { "slot": "lead", "role": "R1", "size": 0.26, "fill": "white", "at": ["hero", "tc", "bc", 0, 0.22], "anim": "A02" },
-      { "type": "spread", "slot": "beads", "role": "R1", "size": 0.27, "fill": "white", "width": 0.95, "at": ["hero", "bc", "tc", 0, -0.12], "anim": "A06", "split": "word" } ] },
-
-  "CK-07": { "style": "A", "name": "Kêu gọi hành động — script đuôi lượn", "example": {"lead": "hãy", "hero": "Lưu lại", "sub": "video này nhé"},
-    "layers": [
-      { "slot": "hero", "role": "R5", "size": 1.35, "fill": "p1", "glow": 0.8, "anim": "A03" },
-      { "slot": "lead", "role": "R1", "size": 0.34, "weight": 700, "fill": "white", "at": ["hero", "tc", "bl", 0.1, 0.38], "anim": "A02" },
-      { "slot": "sub", "role": "R1", "size": 0.34, "weight": 700, "fill": "white", "at": ["hero", "br", "tr", 0.05, -0.3], "anim": "A06", "split": "word" } ] },
-
-  "CK-08": { "style": "A", "name": "Script đầu dòng + dòng đậm", "example": {"hero": "Một", "sub": "góc nhỏ", "line2": "cảm hứng lớn"},
-    "layers": [
-      { "slot": "hero", "role": "R5", "size": 0.75, "fill": "p1", "anim": "A03" },
-      { "slot": "sub", "role": "R1", "size": 0.32, "weight": 700, "fill": "white", "at": ["hero", "br", "bl", 0.04, -0.14], "anim": "A02" },
-      { "slot": "line2", "role": "R3", "size": 0.52, "weight": 800, "fill": "p1", "glow": 1.0, "at": ["hero", "bl", "tl", -0.05, -0.1], "anim": "A01" } ] },
-
-  "CK-09": { "style": "A", "name": "Serif đè chéo lên sans", "example": {"lead": "bí quyết", "hero": "làm chữ", "sub": "thu hút hơn"},
-    "layers": [
-      { "slot": "lead", "role": "R1", "size": 0.32, "fill": "white", "anim": "A02" },
-      { "slot": "hero", "role": "R3", "size": 1.0, "weight": 800, "fill": "white", "at": ["lead", "bl", "tl", -0.2, -0.08], "anim": "A01" },
-      { "slot": "sub", "role": "R6", "size": 0.66, "weight": 400, "fill": "p1", "at": ["hero", "bc", "tl", -0.3, -0.45], "anim": "A12" } ] },
-
-  "CK-10": { "style": "A", "name": "Script đổi màu + bậc thang", "example": {"lead": "những", "hero": "Viral", "mid": "này", "sub": "hook"},
-    "layers": [
-      { "slot": "hero", "role": "R5", "size": 1.2, "fill": "p1", "glow": 1.0, "anim": "A03" },
-      { "slot": "lead", "role": "R1", "size": 0.26, "fill": "white", "at": ["hero", "tr", "bl", -0.4, 0.38], "anim": "A02" },
-      { "slot": "mid", "role": "R1", "size": 0.3, "fill": "white", "at": ["hero", "br", "bl", -0.02, -0.25], "anim": "A02" },
-      { "slot": "sub", "role": "R3", "size": 0.55, "weight": 800, "fill": "white", "at": ["mid", "bl", "tl", -0.15, 0.02], "anim": "A02" } ] },
-
-  "CK-11": { "style": "B", "name": "Script nhỏ + in hoa gradient + dòng giãn chữ", "example": {"lead": "Luôn", "hero": "PHỒN VINH", "sub": "BÊN SÔNG SÀI GÒN"},
-    "layers": [
-      { "slot": "hero", "role": "R2", "size": 1.0, "fill": "p1", "anim": "A04" },
-      { "slot": "lead", "role": "R4", "size": 0.55, "fill": "white", "rot": -10, "at": ["hero", "tl", "bl", -0.08, 0.4], "anim": "A03", "delay": -0.12 },
-      { "slot": "sub", "role": "R1", "size": 0.22, "weight": 800, "tracking": 0.08, "fill": "white", "at": ["hero", "bc", "tc", 0, 0.02], "anim": "A12" } ] },
-
-  "CK-12": { "style": "B", "name": "In hoa + script màu cắt chéo", "example": {"hero": "GA METRO", "sub": "Suối tiên"},
-    "palette": "chrome", "palette2": "fire",
-    "layers": [
-      { "slot": "hero", "role": "R2", "size": 1.0, "fill": "p1", "anim": "A04" },
-      { "slot": "sub", "role": "R4", "size": 0.75, "fill": "p2", "glow": 1.0, "rot": -8, "at": ["hero", "bc", "tl", -0.3, -0.5], "anim": "A03" } ] },
-
-  "CK-13": { "style": "B", "name": "Hai dòng in hoa nóng – lạnh", "example": {"lead": "Để ở", "hero": "THÌ TIỆN", "hero2": "CHO THUÊ", "sub": "thì Tốt"},
-    "palette": "fire", "palette2": "ice",
-    "layers": [
-      { "slot": "hero", "role": "R2", "size": 0.9, "fill": "p1", "anim": "A05", "dir": -1 },
-      { "slot": "lead", "role": "R4", "size": 0.45, "fill": "white", "rot": -10, "at": ["hero", "tl", "bl", -0.12, 0.32], "anim": "A03", "delay": -0.12 },
-      { "slot": "hero2", "role": "R2", "size": 0.9, "fill": "p2", "at": ["hero", "bl", "tl", 0.32, -0.06], "anim": "A05", "dir": 1 },
-      { "slot": "sub", "role": "R4", "size": 0.42, "fill": "white", "rot": -8, "at": ["hero2", "br", "tr", 0.2, -0.32], "anim": "A03" } ] },
-
-  "CK-14": { "style": "B", "name": "Số lớn + chữ nền viền rỗng + nhãn + icon", "example": {"lead": "Chỉ từ", "hero": "500.000.000", "badge": "sở hữu ngay", "icon": "key"},
-    "palette": "gold",
-    "layers": [
-      { "slot": "hero", "role": "R2", "size": 1.0, "fill": "p1", "anim": "A08" },
-      { "type": "ghost", "slot": "hero", "role": "R2", "size": 2.3, "color": "#FFFFFF", "opacity": 0.32, "at": ["hero", "mc", "mc", 0, 0], "anim": "A09", "z": -1, "nobox": true, "delay": -0.1 },
-      { "slot": "lead", "role": "R4", "size": 0.62, "fill": "white", "rot": -10, "at": ["hero", "tl", "bl", -0.05, 0.4], "anim": "A03", "delay": -0.15 },
-      { "type": "pill", "slot": "badge", "role": "R3", "size": 0.24, "bg": "p1", "color": "#2A1A00", "at": ["hero", "br", "tr", -0.05, -0.1], "anim": "A10", "delay": 0.15 },
-      { "type": "icon", "slot": "icon", "size": 0.75, "color": "p1", "rot": -14, "at": ["hero", "bl", "tl", 0.22, -0.05], "anim": "A11", "delay": 0.2 } ] },
-
-  "CK-15": { "style": "B", "name": "Chữ chính + icon neon", "example": {"lead": "Giá trị", "mini": "lên đến", "hero": "100 TỶ", "icon": "money"},
-    "palette": "ice", "palette2": "gold",
-    "layers": [
-      { "slot": "lead", "role": "R4", "size": 0.75, "fill": "p1", "glow": 1.0, "rot": -8, "anim": "A03" },
-      { "slot": "mini", "role": "R1", "size": 0.24, "weight": 700, "fill": "white", "at": ["lead", "bc", "tl", -0.1, -0.12], "anim": "A01" },
-      { "slot": "hero", "role": "R3", "size": 0.85, "fill": "p1", "at": ["mini", "tr", "bl", 0.02, 0.32], "anim": "A05", "dir": 1 },
-      { "type": "icon", "slot": "icon", "size": 0.7, "color": "p2", "rot": 18, "at": ["hero", "tl", "bc", 0.15, 0.25], "anim": "A10", "delay": 0.15 } ] },
-
-  "CK-16": { "style": "B", "name": "Chữ chính + nét gạch lượn + nhãn", "example": {"lead": "thị trường đang", "hero": "TĂNG NHIỆT", "sub": "từng ngày", "badge": ""},
-    "palette": "fire", "palette2": "rose",
-    "layers": [
-      { "slot": "hero", "role": "R3", "size": 1.0, "fill": "p1", "anim": "A05", "dir": -1 },
-      { "slot": "lead", "role": "R1", "size": 0.28, "weight": 700, "fill": "white", "at": ["hero", "tc", "bc", 0, 0.06], "anim": "A01", "delay": -0.1 },
-      { "slot": "sub", "role": "R4", "size": 0.62, "fill": "white", "rot": -6, "at": ["hero", "br", "tr", 0.15, -0.42], "anim": "A03" },
-      { "type": "swoosh", "shape": "arc", "size": 0.5, "width": 1.15, "color": "p2", "thick": 0.06, "at": ["hero", "bl", "bl", -0.1, 0.25], "anim": "A11", "delay": 0.1, "z": 2, "nobox": true },
-      { "type": "pill", "slot": "badge", "role": "R3", "size": 0.2, "bg": "p2", "color": "#FFFFFF", "at": ["hero", "tr", "bl", -0.2, 0.1], "anim": "A10", "delay": 0.2 } ] },
-
-  "CK-17": { "style": "B", "name": "Số khổng lồ + danh sách thanh bo tròn", "example": {"hero": "MISTERS", "num": "3", "items": "FULL NỘI THẤT|VIEW SÔNG|SỔ HỒNG RIÊNG"},
-    "palette": "ice", "palette2": "gold",
-    "layers": [
-      { "slot": "num", "role": "R3", "size": 2.0, "italic": true, "fill": "p1", "glow": 1.0, "anim": "A10" },
-      { "type": "bars", "slot": "items", "role": "R2", "size": 0.3, "bg": "chrome", "color": "#1B2A3A", "gap": 0.1, "at": ["num", "tr", "tl", -0.3, 0.18], "anim": "A10" },
-      { "slot": "hero", "role": "R3", "size": 0.75, "fill": "p2", "at": ["num", "tl", "bl", 0, 0.08], "anim": "A12", "delay": -0.2 } ] },
-
-  "CK-18": { "style": "B", "name": "Tiêu đề + các ô số", "example": {"hero": "3 DỰ ÁN HOT", "count": "3"},
-    "palette": "ice",
-    "layers": [
-      { "slot": "hero", "role": "R3", "size": 0.6, "fill": "p1", "anim": "A12" },
-      { "type": "tiles", "slot": "count", "role": "R3", "size": 0.8, "bg": "p1", "color": "#FFFFFF", "gap": 0.14, "at": ["hero", "bc", "tc", 0, 0.12], "anim": "A10" } ] },
-
-  "CK-19": { "style": "B", "name": "Kêu gọi liên hệ", "example": {"lead": "Liên hệ ngay", "hero": "Em Quỳnh", "phone": "0356 753 266"},
-    "palette": "fire",
-    "layers": [
-      { "slot": "lead", "role": "R4", "size": 0.55, "fill": "p1", "glow": 0.8, "anim": "A03" },
-      { "slot": "hero", "role": "R3", "size": 0.48, "weight": 800, "fill": "white", "at": ["lead", "br", "tl", -0.45, -0.12], "anim": "A01" },
-      { "type": "pill", "slot": "phone", "role": "R1", "size": 0.42, "weight": 500, "radius": 0.08, "bg": "solid:p1", "color": "#FFFFFF", "at": ["hero", "bl", "tl", -0.35, 0.06], "anim": "A10", "delay": 0.1 } ] },
-
-  "CK-20": { "style": "B", "name": "Chữ lồng ảnh + script dẫn", "example": {"lead": "Đầy đủ hồ bơi", "hero": "GYM", "sub": "CÔNG VIÊN", "image": "path/to/photo.jpg"},
-    "palette": "ice",
-    "layers": [
-      { "slot": "lead", "role": "R4", "size": 0.45, "fill": "white", "anim": "A03" },
-      { "slot": "hero", "role": "R2", "size": 1.3, "fill": "img", "at": ["lead", "bl", "tl", 0.3, -0.12], "anim": "A05", "dir": 1 },
-      { "slot": "sub", "role": "R2", "size": 0.42, "fill": "white", "at": ["hero", "br", "tr", 0.12, -0.1], "anim": "A07", "split": "char" } ] }
+ "_note": "Đơn vị kích thước = H (cỡ chữ gốc của cụm). at = [đích, điểm-đích, điểm-mình, dx, dy] (dx, dy theo H). Điểm: tl tc tr ml mc mr bl bc br. Lớp đầu tiên là gốc. Lớp có slot không được điền chữ sẽ bị bỏ qua. fill: white | grey | p1 | p2 | #hex | img. role: R1..R6 (xem fonts.json).",
+ "CK-01": {
+  "style": "A",
+  "name": "Số khổng lồ xếp chồng",
+  "example": {
+   "num": "5",
+   "hero": "hiệu ứng",
+   "sub": "dân edit nên biết"
+  },
+  "layers": [
+   {
+    "slot": "num",
+    "role": "R3",
+    "size": 1.9,
+    "fill": "p1",
+    "glow": 0.9,
+    "anim": "A01"
+   },
+   {
+    "slot": "hero",
+    "role": "R3",
+    "size": 0.6,
+    "weight": 800,
+    "italic": true,
+    "fill": "white",
+    "at": [
+     "num",
+     "mc",
+     "bl",
+     -0.1,
+     0.12
+    ],
+    "anim": "A02"
+   },
+   {
+    "slot": "sub",
+    "role": "R6",
+    "size": 0.3,
+    "weight": 400,
+    "fill": "p1",
+    "at": [
+     "hero",
+     "bl",
+     "tl",
+     0.02,
+     -0.04
+    ],
+    "anim": "A01"
+   }
+  ]
+ },
+ "CK-02": {
+  "style": "A",
+  "name": "Bậc thang 3 tầng",
+  "example": {
+   "lead": "nâng",
+   "mid": "trình",
+   "hero": "tư duy"
+  },
+  "layers": [
+   {
+    "slot": "lead",
+    "role": "R1",
+    "size": 0.36,
+    "fill": "grey",
+    "anim": "A02"
+   },
+   {
+    "slot": "mid",
+    "role": "R1",
+    "size": 0.55,
+    "weight": 700,
+    "fill": "white",
+    "at": [
+     "lead",
+     "br",
+     "tl",
+     -0.2,
+     -0.12
+    ],
+    "anim": "A02"
+   },
+   {
+    "slot": "hero",
+    "role": "R6",
+    "size": 0.85,
+    "weight": 400,
+    "fill": "p1",
+    "at": [
+     "mid",
+     "br",
+     "tl",
+     -0.25,
+     -0.08
+    ],
+    "anim": "A01"
+   }
+  ]
+ },
+ "CK-03": {
+  "style": "A",
+  "name": "Kẹp giữa",
+  "example": {
+   "lead": "những",
+   "lead2": "hiệu",
+   "hero": "ứng",
+   "sub": "siêu",
+   "hero2": "hot"
+  },
+  "layers": [
+   {
+    "slot": "hero",
+    "role": "R6",
+    "size": 1.0,
+    "weight": 700,
+    "fill": "p1",
+    "anim": "A01"
+   },
+   {
+    "slot": "lead",
+    "role": "R1",
+    "size": 0.3,
+    "fill": "white",
+    "at": [
+     "hero",
+     "tl",
+     "bl",
+     -0.12,
+     0.12
+    ],
+    "anim": "A02"
+   },
+   {
+    "slot": "lead2",
+    "role": "R1",
+    "size": 0.3,
+    "fill": "white",
+    "at": [
+     "hero",
+     "tr",
+     "bl",
+     -0.05,
+     0.22
+    ],
+    "anim": "A02"
+   },
+   {
+    "slot": "sub",
+    "role": "R1",
+    "size": 0.28,
+    "fill": "grey",
+    "at": [
+     "hero",
+     "bl",
+     "tr",
+     0.05,
+     -0.3
+    ],
+    "anim": "A02"
+   },
+   {
+    "slot": "hero2",
+    "role": "R6",
+    "size": 0.85,
+    "weight": 700,
+    "fill": "p1",
+    "at": [
+     "hero",
+     "bc",
+     "tl",
+     -0.1,
+     -0.3
+    ],
+    "anim": "A01"
+   }
+  ]
+ },
+ "CK-04": {
+  "style": "A",
+  "name": "Dẫn + script",
+  "example": {
+   "lead": "sử dụng AI",
+   "hero": "của gemini"
+  },
+  "layers": [
+   {
+    "slot": "lead",
+    "role": "R1",
+    "size": 0.38,
+    "fill": "white",
+    "anim": "A02"
+   },
+   {
+    "slot": "hero",
+    "role": "R5",
+    "size": 1.0,
+    "fill": "p1",
+    "glow": 1.0,
+    "at": [
+     "lead",
+     "bc",
+     "tc",
+     0.1,
+     -0.3
+    ],
+    "anim": "A03"
+   }
+  ]
+ },
+ "CK-05": {
+  "style": "A",
+  "name": "Sans đậm + script đè dưới",
+  "example": {
+   "lead": "nếu bạn",
+   "lead2": "đang tìm",
+   "hero": "không gian",
+   "sub": "Sống lý tưởng"
+  },
+  "layers": [
+   {
+    "slot": "hero",
+    "role": "R3",
+    "size": 1.0,
+    "weight": 800,
+    "fill": "p1",
+    "anim": "A01"
+   },
+   {
+    "slot": "lead",
+    "role": "R1",
+    "size": 0.28,
+    "fill": "white",
+    "at": [
+     "hero",
+     "tc",
+     "bl",
+     0.02,
+     0.08
+    ],
+    "anim": "A02"
+   },
+   {
+    "slot": "lead2",
+    "role": "R1",
+    "size": 0.28,
+    "fill": "white",
+    "at": [
+     "lead",
+     "br",
+     "bl",
+     0.3,
+     0
+    ],
+    "anim": "A02"
+   },
+   {
+    "slot": "sub",
+    "role": "R5",
+    "size": 0.62,
+    "fill": "white",
+    "at": [
+     "hero",
+     "bl",
+     "tl",
+     0.05,
+     -0.42
+    ],
+    "anim": "A03"
+   }
+  ]
+ },
+ "CK-06": {
+  "style": "A",
+  "name": "Serif + các từ rải bên dưới",
+  "example": {
+   "lead": "khép lại",
+   "hero": "hành trình",
+   "beads": "bằng giá trị thật"
+  },
+  "layers": [
+   {
+    "slot": "hero",
+    "role": "R6",
+    "size": 1.0,
+    "weight": 400,
+    "fill": "p1",
+    "glow": 1.0,
+    "anim": "A01"
+   },
+   {
+    "slot": "lead",
+    "role": "R1",
+    "size": 0.26,
+    "fill": "white",
+    "at": [
+     "hero",
+     "tc",
+     "bc",
+     0,
+     0.22
+    ],
+    "anim": "A02"
+   },
+   {
+    "type": "spread",
+    "slot": "beads",
+    "role": "R1",
+    "size": 0.27,
+    "fill": "white",
+    "width": 0.95,
+    "at": [
+     "hero",
+     "bc",
+     "tc",
+     0,
+     -0.12
+    ],
+    "anim": "A06",
+    "split": "word"
+   }
+  ]
+ },
+ "CK-07": {
+  "style": "A",
+  "name": "Kêu gọi hành động — script đuôi lượn",
+  "example": {
+   "lead": "hãy",
+   "hero": "Lưu lại",
+   "sub": "video này nhé"
+  },
+  "layers": [
+   {
+    "slot": "hero",
+    "role": "R5",
+    "size": 1.35,
+    "fill": "p1",
+    "glow": 0.8,
+    "anim": "A03"
+   },
+   {
+    "slot": "lead",
+    "role": "R1",
+    "size": 0.34,
+    "weight": 700,
+    "fill": "white",
+    "at": [
+     "hero",
+     "tc",
+     "bl",
+     0.1,
+     0.38
+    ],
+    "anim": "A02"
+   },
+   {
+    "slot": "sub",
+    "role": "R1",
+    "size": 0.34,
+    "weight": 700,
+    "fill": "white",
+    "at": [
+     "hero",
+     "br",
+     "tr",
+     0.05,
+     -0.3
+    ],
+    "anim": "A06",
+    "split": "word"
+   }
+  ]
+ },
+ "CK-08": {
+  "style": "A",
+  "name": "Script đầu dòng + dòng đậm",
+  "example": {
+   "hero": "Một",
+   "sub": "góc nhỏ",
+   "line2": "cảm hứng lớn"
+  },
+  "layers": [
+   {
+    "slot": "hero",
+    "role": "R5",
+    "size": 0.75,
+    "fill": "p1",
+    "anim": "A03"
+   },
+   {
+    "slot": "sub",
+    "role": "R1",
+    "size": 0.32,
+    "weight": 700,
+    "fill": "white",
+    "at": [
+     "hero",
+     "br",
+     "bl",
+     0.04,
+     -0.14
+    ],
+    "anim": "A02"
+   },
+   {
+    "slot": "line2",
+    "role": "R3",
+    "size": 0.52,
+    "weight": 800,
+    "fill": "p1",
+    "glow": 1.0,
+    "at": [
+     "hero",
+     "bl",
+     "tl",
+     -0.05,
+     -0.1
+    ],
+    "anim": "A01"
+   }
+  ]
+ },
+ "CK-09": {
+  "style": "A",
+  "name": "Serif đè chéo lên sans",
+  "example": {
+   "lead": "bí quyết",
+   "hero": "làm chữ",
+   "sub": "thu hút hơn"
+  },
+  "layers": [
+   {
+    "slot": "lead",
+    "role": "R1",
+    "size": 0.32,
+    "fill": "white",
+    "anim": "A02"
+   },
+   {
+    "slot": "hero",
+    "role": "R3",
+    "size": 1.0,
+    "weight": 800,
+    "fill": "white",
+    "at": [
+     "lead",
+     "bl",
+     "tl",
+     -0.2,
+     -0.08
+    ],
+    "anim": "A01"
+   },
+   {
+    "slot": "sub",
+    "role": "R6",
+    "size": 0.66,
+    "weight": 400,
+    "fill": "p1",
+    "at": [
+     "hero",
+     "bc",
+     "tl",
+     -0.3,
+     -0.45
+    ],
+    "anim": "A12"
+   }
+  ]
+ },
+ "CK-10": {
+  "style": "A",
+  "name": "Script đổi màu + bậc thang",
+  "example": {
+   "lead": "những",
+   "hero": "Viral",
+   "mid": "này",
+   "sub": "hook"
+  },
+  "layers": [
+   {
+    "slot": "hero",
+    "role": "R5",
+    "size": 1.2,
+    "fill": "p1",
+    "glow": 1.0,
+    "anim": "A03"
+   },
+   {
+    "slot": "lead",
+    "role": "R1",
+    "size": 0.26,
+    "fill": "white",
+    "at": [
+     "hero",
+     "tr",
+     "bl",
+     -0.4,
+     0.38
+    ],
+    "anim": "A02"
+   },
+   {
+    "slot": "mid",
+    "role": "R1",
+    "size": 0.3,
+    "fill": "white",
+    "at": [
+     "hero",
+     "br",
+     "bl",
+     -0.02,
+     -0.25
+    ],
+    "anim": "A02"
+   },
+   {
+    "slot": "sub",
+    "role": "R3",
+    "size": 0.55,
+    "weight": 800,
+    "fill": "white",
+    "at": [
+     "mid",
+     "bl",
+     "tl",
+     -0.15,
+     0.02
+    ],
+    "anim": "A02"
+   }
+  ]
+ },
+ "CK-11": {
+  "style": "B",
+  "name": "Script nhỏ + in hoa gradient + dòng giãn chữ",
+  "example": {
+   "lead": "Luôn",
+   "hero": "PHỒN VINH",
+   "sub": "BÊN SÔNG SÀI GÒN"
+  },
+  "layers": [
+   {
+    "slot": "hero",
+    "role": "R2",
+    "size": 1.0,
+    "fill": "p1",
+    "anim": "A04"
+   },
+   {
+    "slot": "lead",
+    "role": "R4",
+    "size": 0.55,
+    "fill": "white",
+    "rot": -10,
+    "at": [
+     "hero",
+     "tl",
+     "bl",
+     -0.08,
+     0.4
+    ],
+    "anim": "A03",
+    "delay": -0.12
+   },
+   {
+    "slot": "sub",
+    "role": "R1",
+    "size": 0.22,
+    "weight": 800,
+    "tracking": 0.08,
+    "fill": "white",
+    "at": [
+     "hero",
+     "bc",
+     "tc",
+     0,
+     0.02
+    ],
+    "anim": "A12"
+   }
+  ]
+ },
+ "CK-12": {
+  "style": "B",
+  "name": "In hoa + script màu cắt chéo",
+  "example": {
+   "hero": "GA METRO",
+   "sub": "Suối tiên"
+  },
+  "palette": "chrome",
+  "palette2": "fire",
+  "layers": [
+   {
+    "slot": "hero",
+    "role": "R2",
+    "size": 1.0,
+    "fill": "p1",
+    "anim": "A04"
+   },
+   {
+    "slot": "sub",
+    "role": "R4",
+    "size": 0.75,
+    "fill": "p2",
+    "glow": 1.0,
+    "rot": -8,
+    "at": [
+     "hero",
+     "bc",
+     "tl",
+     -0.3,
+     -0.5
+    ],
+    "anim": "A03"
+   }
+  ]
+ },
+ "CK-13": {
+  "style": "B",
+  "name": "Hai dòng in hoa nóng – lạnh",
+  "example": {
+   "lead": "Để ở",
+   "hero": "THÌ TIỆN",
+   "hero2": "CHO THUÊ",
+   "sub": "thì Tốt"
+  },
+  "palette": "fire",
+  "palette2": "ice",
+  "layers": [
+   {
+    "slot": "hero",
+    "role": "R2",
+    "size": 0.9,
+    "fill": "p1",
+    "anim": "A05",
+    "dir": -1
+   },
+   {
+    "slot": "lead",
+    "role": "R4",
+    "size": 0.45,
+    "fill": "white",
+    "rot": -10,
+    "at": [
+     "hero",
+     "tl",
+     "bl",
+     -0.12,
+     0.32
+    ],
+    "anim": "A03",
+    "delay": -0.12
+   },
+   {
+    "slot": "hero2",
+    "role": "R2",
+    "size": 0.9,
+    "fill": "p2",
+    "at": [
+     "hero",
+     "bl",
+     "tl",
+     0.32,
+     -0.06
+    ],
+    "anim": "A05",
+    "dir": 1
+   },
+   {
+    "slot": "sub",
+    "role": "R4",
+    "size": 0.42,
+    "fill": "white",
+    "rot": -8,
+    "at": [
+     "hero2",
+     "br",
+     "tr",
+     0.2,
+     -0.32
+    ],
+    "anim": "A03"
+   }
+  ]
+ },
+ "CK-14": {
+  "style": "B",
+  "name": "Số lớn + chữ nền viền rỗng + nhãn + icon",
+  "example": {
+   "lead": "Chỉ từ",
+   "hero": "500.000.000",
+   "badge": "sở hữu ngay",
+   "icon": "key",
+   "ghost": "(tuỳ chọn, vd $$$ — bỏ trống thì lặp lại chữ chính)"
+  },
+  "palette": "gold",
+  "layers": [
+   {
+    "slot": "hero",
+    "role": "R2",
+    "size": 1.0,
+    "fill": "p1",
+    "anim": "A08"
+   },
+   {
+    "type": "ghost",
+    "slot": "ghost",
+    "role": "R2",
+    "size": 2.3,
+    "color": "#FFFFFF",
+    "opacity": 0.32,
+    "at": [
+     "hero",
+     "mc",
+     "mc",
+     0,
+     0
+    ],
+    "anim": "A09",
+    "z": -1,
+    "nobox": true,
+    "delay": -0.1,
+    "fallback": "hero"
+   },
+   {
+    "slot": "lead",
+    "role": "R4",
+    "size": 0.62,
+    "fill": "white",
+    "rot": -10,
+    "at": [
+     "hero",
+     "tl",
+     "bl",
+     -0.05,
+     0.4
+    ],
+    "anim": "A03",
+    "delay": -0.15
+   },
+   {
+    "type": "pill",
+    "slot": "badge",
+    "role": "R3",
+    "size": 0.24,
+    "bg": "p1",
+    "color": "#2A1A00",
+    "at": [
+     "hero",
+     "br",
+     "tr",
+     -0.05,
+     -0.1
+    ],
+    "anim": "A10",
+    "delay": 0.15
+   },
+   {
+    "type": "icon",
+    "slot": "icon",
+    "size": 0.75,
+    "color": "p1",
+    "rot": -14,
+    "at": [
+     "hero",
+     "bl",
+     "tl",
+     0.22,
+     -0.05
+    ],
+    "anim": "A11",
+    "delay": 0.2
+   }
+  ]
+ },
+ "CK-15": {
+  "style": "B",
+  "name": "Chữ chính + icon neon",
+  "example": {
+   "lead": "Giá trị",
+   "mini": "lên đến",
+   "hero": "100 TỶ",
+   "icon": "money"
+  },
+  "palette": "ice",
+  "palette2": "gold",
+  "layers": [
+   {
+    "slot": "lead",
+    "role": "R4",
+    "size": 0.75,
+    "fill": "p1",
+    "glow": 1.0,
+    "rot": -8,
+    "anim": "A03"
+   },
+   {
+    "slot": "mini",
+    "role": "R1",
+    "size": 0.24,
+    "weight": 700,
+    "fill": "white",
+    "at": [
+     "lead",
+     "bc",
+     "tl",
+     -0.1,
+     -0.12
+    ],
+    "anim": "A01"
+   },
+   {
+    "slot": "hero",
+    "role": "R3",
+    "size": 0.85,
+    "fill": "p1",
+    "at": [
+     "mini",
+     "tr",
+     "bl",
+     0.02,
+     0.32
+    ],
+    "anim": "A05",
+    "dir": 1
+   },
+   {
+    "type": "icon",
+    "slot": "icon",
+    "size": 0.7,
+    "color": "p2",
+    "rot": 18,
+    "at": [
+     "hero",
+     "tl",
+     "bc",
+     0.15,
+     0.25
+    ],
+    "anim": "A10",
+    "delay": 0.15
+   }
+  ]
+ },
+ "CK-16": {
+  "style": "B",
+  "name": "Chữ chính + nét gạch lượn + nhãn",
+  "example": {
+   "lead": "thị trường đang",
+   "hero": "TĂNG NHIỆT",
+   "sub": "từng ngày",
+   "badge": ""
+  },
+  "palette": "fire",
+  "palette2": "rose",
+  "layers": [
+   {
+    "slot": "hero",
+    "role": "R3",
+    "size": 1.0,
+    "fill": "p1",
+    "anim": "A05",
+    "dir": -1
+   },
+   {
+    "slot": "lead",
+    "role": "R1",
+    "size": 0.28,
+    "weight": 700,
+    "fill": "white",
+    "at": [
+     "hero",
+     "tc",
+     "bc",
+     0,
+     0.06
+    ],
+    "anim": "A01",
+    "delay": -0.1
+   },
+   {
+    "slot": "sub",
+    "role": "R4",
+    "size": 0.62,
+    "fill": "white",
+    "rot": -6,
+    "at": [
+     "hero",
+     "br",
+     "tr",
+     0.15,
+     -0.42
+    ],
+    "anim": "A03"
+   },
+   {
+    "type": "swoosh",
+    "shape": "arc",
+    "size": 0.5,
+    "width": 1.15,
+    "color": "p2",
+    "thick": 0.06,
+    "at": [
+     "hero",
+     "bl",
+     "bl",
+     -0.1,
+     0.25
+    ],
+    "anim": "A11",
+    "delay": 0.1,
+    "z": 2,
+    "nobox": true
+   },
+   {
+    "type": "pill",
+    "slot": "badge",
+    "role": "R3",
+    "size": 0.28,
+    "bg": "p2",
+    "color": "#FFFFFF",
+    "at": [
+     "hero",
+     "tr",
+     "bl",
+     -0.2,
+     0.1
+    ],
+    "anim": "A10",
+    "delay": 0.2
+   }
+  ],
+  "_variants": "Đổi nét: \"layers\": {\"swoosh3\": {\"shape\": \"bar\"}} (vạch thẳng) | arc | under | brush | wave"
+ },
+ "CK-17": {
+  "style": "B",
+  "name": "Số khổng lồ + danh sách thanh bo tròn",
+  "example": {
+   "hero": "MISTERS",
+   "num": "3",
+   "items": "FULL NỘI THẤT|VIEW SÔNG|SỔ HỒNG RIÊNG"
+  },
+  "palette": "ice",
+  "palette2": "gold",
+  "layers": [
+   {
+    "slot": "num",
+    "role": "R3",
+    "size": 2.0,
+    "italic": true,
+    "fill": "p1",
+    "glow": 1.0,
+    "anim": "A10"
+   },
+   {
+    "type": "bars",
+    "slot": "items",
+    "role": "R2",
+    "size": 0.3,
+    "bg": "chrome",
+    "color": "#1B2A3A",
+    "gap": 0.1,
+    "at": [
+     "num",
+     "tr",
+     "tl",
+     -0.3,
+     0.18
+    ],
+    "anim": "A10"
+   },
+   {
+    "slot": "hero",
+    "role": "R3",
+    "size": 0.75,
+    "fill": "p2",
+    "at": [
+     "num",
+     "tl",
+     "bl",
+     0,
+     0.08
+    ],
+    "anim": "A12",
+    "delay": -0.2
+   }
+  ]
+ },
+ "CK-18": {
+  "style": "B",
+  "name": "Tiêu đề + các ô số",
+  "example": {
+   "hero": "3 DỰ ÁN HOT",
+   "count": "3"
+  },
+  "palette": "ice",
+  "layers": [
+   {
+    "slot": "hero",
+    "role": "R3",
+    "size": 0.6,
+    "fill": "p1",
+    "anim": "A12"
+   },
+   {
+    "type": "tiles",
+    "slot": "count",
+    "role": "R3",
+    "size": 0.8,
+    "bg": "p1",
+    "color": "#FFFFFF",
+    "gap": 0.14,
+    "at": [
+     "hero",
+     "bc",
+     "tc",
+     0,
+     0.12
+    ],
+    "anim": "A10"
+   }
+  ]
+ },
+ "CK-19": {
+  "style": "B",
+  "name": "Kêu gọi liên hệ",
+  "example": {
+   "lead": "Liên hệ ngay",
+   "hero": "Em Quỳnh",
+   "phone": "0356 753 266"
+  },
+  "palette": "fire",
+  "layers": [
+   {
+    "slot": "lead",
+    "role": "R4",
+    "size": 0.55,
+    "fill": "p1",
+    "glow": 0.8,
+    "anim": "A03"
+   },
+   {
+    "slot": "hero",
+    "role": "R3",
+    "size": 0.48,
+    "weight": 800,
+    "fill": "white",
+    "at": [
+     "lead",
+     "br",
+     "tl",
+     -0.45,
+     -0.12
+    ],
+    "anim": "A01"
+   },
+   {
+    "type": "pill",
+    "slot": "phone",
+    "role": "R1",
+    "size": 0.42,
+    "weight": 500,
+    "radius": 0.08,
+    "bg": "solid:p1",
+    "color": "#FFFFFF",
+    "at": [
+     "hero",
+     "bl",
+     "tl",
+     -0.35,
+     0.06
+    ],
+    "anim": "A10",
+    "delay": 0.1
+   }
+  ]
+ },
+ "CK-20": {
+  "style": "B",
+  "name": "Chữ lồng ảnh + script dẫn",
+  "example": {
+   "lead": "Đầy đủ hồ bơi",
+   "hero": "GYM",
+   "sub": "CÔNG VIÊN",
+   "image": "path/to/photo.jpg"
+  },
+  "palette": "ice",
+  "layers": [
+   {
+    "slot": "lead",
+    "role": "R4",
+    "size": 0.45,
+    "fill": "white",
+    "anim": "A03"
+   },
+   {
+    "slot": "hero",
+    "role": "R2",
+    "size": 1.3,
+    "fill": "img",
+    "at": [
+     "lead",
+     "bl",
+     "tl",
+     0.3,
+     -0.12
+    ],
+    "anim": "A05",
+    "dir": 1
+   },
+   {
+    "slot": "sub",
+    "role": "R2",
+    "size": 0.42,
+    "fill": "white",
+    "at": [
+     "hero",
+     "br",
+     "tr",
+     0.12,
+     -0.1
+    ],
+    "anim": "A07",
+    "split": "char"
+   }
+  ]
+ },
+ "CK-21": {
+  "style": "B",
+  "name": "Chữ cái đầu khổng lồ",
+  "example": {
+   "lead": "chỉ có một",
+   "initial": "C",
+   "hero": "ơ hội",
+   "sub": "đầu tư"
+  },
+  "palette": "royal",
+  "palette2": "rose",
+  "layers": [
+   {
+    "slot": "initial",
+    "role": "R5",
+    "size": 2.1,
+    "fill": "p1",
+    "glow": 1.0,
+    "anim": "A03",
+    "z": -1
+   },
+   {
+    "slot": "hero",
+    "role": "R3",
+    "size": 0.85,
+    "fill": "p1",
+    "at": [
+     "initial",
+     "mr",
+     "ml",
+     -0.38,
+     -0.02
+    ],
+    "anim": "A01"
+   },
+   {
+    "slot": "lead",
+    "role": "R1",
+    "size": 0.26,
+    "weight": 500,
+    "fill": "white",
+    "at": [
+     "hero",
+     "tc",
+     "bc",
+     0,
+     0.04
+    ],
+    "anim": "A01",
+    "delay": -0.15
+   },
+   {
+    "slot": "sub",
+    "role": "R3",
+    "size": 0.5,
+    "weight": 800,
+    "fill": "white",
+    "at": [
+     "hero",
+     "bc",
+     "tc",
+     0.05,
+     -0.02
+    ],
+    "anim": "A12"
+   }
+  ]
+ },
+ "CK-22": {
+  "style": "B",
+  "name": "Số nền + in hoa + script",
+  "example": {
+   "num": "1",
+   "hero": "BẤT ĐỘNG SẢN",
+   "sub": "Đáng sống"
+  },
+  "palette": "fire",
+  "layers": [
+   {
+    "slot": "num",
+    "role": "R3",
+    "size": 1.9,
+    "italic": true,
+    "fill": "p1",
+    "glow": 1.0,
+    "anim": "A10",
+    "z": -1
+   },
+   {
+    "slot": "hero",
+    "role": "R3",
+    "size": 0.5,
+    "weight": 900,
+    "fill": "p1",
+    "at": [
+     "num",
+     "mr",
+     "bl",
+     -0.3,
+     0.05
+    ],
+    "anim": "A05",
+    "dir": 1
+   },
+   {
+    "slot": "sub",
+    "role": "R4",
+    "size": 0.85,
+    "fill": "white",
+    "rot": -6,
+    "at": [
+     "hero",
+     "bl",
+     "tl",
+     0.12,
+     -0.32
+    ],
+    "anim": "A03"
+   }
+  ]
+ },
+ "CK-23": {
+  "style": "B",
+  "name": "Câu hỏi sans 3 tầng",
+  "example": {
+   "lead": "Anh Chị",
+   "hero": "Có Tin",
+   "sub": "được không?"
+  },
+  "palette": "cyan",
+  "layers": [
+   {
+    "slot": "hero",
+    "role": "R3",
+    "size": 0.8,
+    "weight": 800,
+    "fill": "p1",
+    "anim": "A12"
+   },
+   {
+    "slot": "lead",
+    "role": "R1",
+    "size": 0.32,
+    "weight": 700,
+    "fill": "white",
+    "at": [
+     "hero",
+     "ml",
+     "mr",
+     -0.1,
+     0.08
+    ],
+    "anim": "A01",
+    "delay": -0.15
+   },
+   {
+    "slot": "sub",
+    "role": "R1",
+    "size": 0.36,
+    "weight": 600,
+    "fill": "white",
+    "at": [
+     "hero",
+     "br",
+     "tr",
+     0.05,
+     0.0
+    ],
+    "anim": "A06",
+    "split": "word"
+   }
+  ]
+ },
+ "CK-24": {
+  "style": "B",
+  "name": "Chữ chính kẹp icon hai bên",
+  "example": {
+   "hero": "SINH TIỀN",
+   "sub": "Mỗi Tháng",
+   "icon": "money",
+   "icon2": "money"
+  },
+  "palette": "cyan",
+  "palette2": "gold",
+  "layers": [
+   {
+    "slot": "hero",
+    "role": "R2",
+    "size": 1.0,
+    "fill": "p1",
+    "anim": "A04"
+   },
+   {
+    "slot": "sub",
+    "role": "R4",
+    "size": 0.7,
+    "fill": "white",
+    "rot": -8,
+    "at": [
+     "hero",
+     "bc",
+     "tc",
+     0.05,
+     -0.4
+    ],
+    "anim": "A03"
+   },
+   {
+    "type": "icon",
+    "slot": "icon",
+    "size": 0.6,
+    "color": "p2",
+    "rot": -18,
+    "at": [
+     "hero",
+     "bl",
+     "mr",
+     0.12,
+     -0.05
+    ],
+    "anim": "A10",
+    "delay": 0.1
+   },
+   {
+    "type": "icon",
+    "slot": "icon2",
+    "size": 0.6,
+    "color": "p2",
+    "rot": 16,
+    "at": [
+     "hero",
+     "br",
+     "ml",
+     -0.12,
+     -0.25
+    ],
+    "anim": "A10",
+    "delay": 0.2
+   }
+  ]
+ },
+ "CK-25": {
+  "style": "B",
+  "name": "Số trong hộp bóng",
+  "example": {
+   "lead": "Căn hộ",
+   "hero": "500.000.000",
+   "sub": "view sông",
+   "icon": "star"
+  },
+  "palette": "ice",
+  "layers": [
+   {
+    "type": "pill",
+    "slot": "hero",
+    "role": "R2",
+    "size": 0.62,
+    "radius": 0.14,
+    "bg": "p1",
+    "color": "#FFFFFF",
+    "anim": "A10"
+   },
+   {
+    "slot": "lead",
+    "role": "R3",
+    "size": 0.32,
+    "weight": 800,
+    "fill": "white",
+    "at": [
+     "hero",
+     "tl",
+     "bl",
+     0.08,
+     0.02
+    ],
+    "anim": "A01",
+    "delay": -0.12
+   },
+   {
+    "slot": "sub",
+    "role": "R4",
+    "size": 0.7,
+    "fill": "white",
+    "rot": -6,
+    "at": [
+     "hero",
+     "br",
+     "tr",
+     0.1,
+     -0.2
+    ],
+    "anim": "A03"
+   },
+   {
+    "type": "icon",
+    "slot": "icon",
+    "size": 0.4,
+    "color": "p1",
+    "rot": 12,
+    "at": [
+     "hero",
+     "tr",
+     "bl",
+     -0.1,
+     0.18
+    ],
+    "anim": "A11",
+    "delay": 0.2
+   }
+  ]
+ },
+ "CK-26": {
+  "style": "B",
+  "name": "Chữ chính + hàng icon",
+  "example": {
+   "lead": "Dòng tiền",
+   "hero": "ĐẦU TƯ BĐS",
+   "icon": "money"
+  },
+  "palette": "royal",
+  "layers": [
+   {
+    "slot": "hero",
+    "role": "R2",
+    "size": 1.0,
+    "fill": "p1",
+    "anim": "A04"
+   },
+   {
+    "slot": "lead",
+    "role": "R4",
+    "size": 0.6,
+    "fill": "white",
+    "rot": -8,
+    "at": [
+     "hero",
+     "tr",
+     "br",
+     0.12,
+     0.22
+    ],
+    "anim": "A03",
+    "delay": -0.12
+   },
+   {
+    "type": "iconrow",
+    "slot": "icon",
+    "size": 0.62,
+    "count": 3,
+    "bg": "p1",
+    "color": "#FFFFFF",
+    "at": [
+     "hero",
+     "bc",
+     "tc",
+     0,
+     0.06
+    ],
+    "anim": "A10",
+    "delay": 0.1,
+    "icon": "money"
+   }
+  ]
+ },
+ "CK-27": {
+  "style": "B",
+  "name": "Số + serif đè dưới",
+  "example": {
+   "hero": "550 TỶ",
+   "sub": "sở hữu ngay",
+   "icon": ""
+  },
+  "palette": "fire",
+  "layers": [
+   {
+    "slot": "hero",
+    "role": "R3",
+    "size": 1.0,
+    "fill": "p1",
+    "anim": "A08"
+   },
+   {
+    "slot": "sub",
+    "role": "R6",
+    "size": 0.55,
+    "weight": 400,
+    "fill": "white",
+    "at": [
+     "hero",
+     "bc",
+     "tc",
+     0.02,
+     -0.4
+    ],
+    "anim": "A01"
+   },
+   {
+    "type": "icon",
+    "slot": "icon",
+    "size": 0.6,
+    "color": "p1",
+    "rot": -12,
+    "at": [
+     "hero",
+     "ml",
+     "mr",
+     0.15,
+     0.0
+    ],
+    "anim": "A11",
+    "delay": 0.15
+   }
+  ]
+ },
+ "CK-28": {
+  "style": "B",
+  "name": "Tiêu đề tối giản 2 dòng",
+  "example": {
+   "hero": "Vị Trí Vàng",
+   "sub": "Kết nối mọi giá trị"
+  },
+  "palette": "ice",
+  "layers": [
+   {
+    "slot": "hero",
+    "role": "R1",
+    "size": 0.7,
+    "weight": 700,
+    "fill": "p1",
+    "anim": "A12"
+   },
+   {
+    "slot": "sub",
+    "role": "R1",
+    "size": 0.28,
+    "weight": 400,
+    "tracking": 0.02,
+    "fill": "white",
+    "at": [
+     "hero",
+     "bc",
+     "tc",
+     0,
+     0.02
+    ],
+    "anim": "A01"
+   }
+  ]
+ },
+ "CK-29": {
+  "style": "B",
+  "name": "% khổng lồ lệch góc",
+  "example": {
+   "hero": "The Global",
+   "sub": "Khởi công",
+   "pct": "90%"
+  },
+  "palette": "royal",
+  "palette2": "gold",
+  "layers": [
+   {
+    "slot": "hero",
+    "role": "R2",
+    "size": 0.75,
+    "fill": "p1",
+    "anim": "A05",
+    "dir": -1
+   },
+   {
+    "slot": "sub",
+    "role": "R4",
+    "size": 0.42,
+    "fill": "white",
+    "rot": -8,
+    "at": [
+     "hero",
+     "bc",
+     "tl",
+     -0.05,
+     -0.22
+    ],
+    "anim": "A03"
+   },
+   {
+    "slot": "pct",
+    "role": "R2",
+    "size": 1.3,
+    "fill": "p2",
+    "at": [
+     "hero",
+     "br",
+     "tl",
+     -0.15,
+     0.05
+    ],
+    "anim": "A08",
+    "delay": 0.1
+   }
+  ]
+ },
+ "CK-30": {
+  "style": "B",
+  "name": "Câu hook nhiều tầng",
+  "example": {
+   "lead": "Nếu có",
+   "num": "30s",
+   "line": "tôi sẽ cho bạn biết",
+   "hero": "VÌ SAO",
+   "sub": "căn này đáng xem"
+  },
+  "palette": "gold",
+  "palette2": "chrome",
+  "layers": [
+   {
+    "slot": "lead",
+    "role": "R4",
+    "size": 0.48,
+    "fill": "white",
+    "rot": -6,
+    "anim": "A03"
+   },
+   {
+    "slot": "num",
+    "role": "R3",
+    "size": 0.66,
+    "fill": "p1",
+    "at": [
+     "lead",
+     "mr",
+     "ml",
+     0.02,
+     -0.06
+    ],
+    "anim": "A10"
+   },
+   {
+    "slot": "line",
+    "role": "R6",
+    "size": 0.36,
+    "weight": 400,
+    "fill": "white",
+    "at": [
+     "lead",
+     "bl",
+     "tl",
+     0.05,
+     -0.06
+    ],
+    "anim": "A06",
+    "split": "word"
+   },
+   {
+    "slot": "hero",
+    "role": "R3",
+    "size": 0.66,
+    "fill": "p2",
+    "at": [
+     "line",
+     "bl",
+     "tl",
+     -0.02,
+     0.05
+    ],
+    "anim": "A04"
+   },
+   {
+    "slot": "sub",
+    "role": "R1",
+    "size": 0.32,
+    "weight": 700,
+    "fill": "white",
+    "at": [
+     "hero",
+     "br",
+     "tl",
+     -0.25,
+     -0.02
+    ],
+    "anim": "A06",
+    "split": "word"
+   }
+  ]
+ }
 }

@@ -1,6 +1,6 @@
 ---
 name: chukieu
-description: Dựng cụm typo (chữ kiểu) động cho video dọc 9:16 TikTok/Reels/Shorts — cụm 3–4 lớp phối font (in hoa hẹp, sans tròn đậm, script chữ ký, script đuôi lượn, serif nghiêng), gradient kim loại/neon phát sáng, icon neon, nhãn bo tròn, nét gạch lượn, chữ nền viền rỗng, 14 kiểu chữ vào khớp từng từ lời thoại. Hai dòng phong cách — A "neon thanh lịch" và B "kim loại sôi động" — với 20 mẫu cụm CK-01..CK-20. Xuất lớp chữ nền trong suốt (MOV ProRes 4444 / WebM) hoặc ghép thẳng vào video. Dùng khi người dùng gọi chukieu, cần chữ kiểu / typo / text động cho video, hoặc khi một skill edit khác (nghia-edit, andy-edit…) cần lớp chữ.
+description: Dựng cụm typo (chữ kiểu) động cho video dọc 9:16 TikTok/Reels/Shorts — cụm 3–4 lớp phối font (in hoa hẹp, sans tròn đậm, script chữ ký, script đuôi lượn, serif nghiêng), gradient kim loại/neon phát sáng, icon neon, nhãn bo tròn, nét gạch lượn, chữ nền viền rỗng, 14 kiểu chữ vào khớp từng từ lời thoại. Hai dòng phong cách — A "neon thanh lịch" và B "kim loại sôi động" — với 30 mẫu cụm CK-01..CK-30. Xuất lớp chữ nền trong suốt (MOV ProRes 4444 / WebM) hoặc ghép thẳng vào video. Dùng khi người dùng gọi chukieu, cần chữ kiểu / typo / text động cho video, hoặc khi một skill edit khác (nghia-edit, andy-edit…) cần lớp chữ.
 ---
 
 # chukieu — cụm typo động
@@ -72,12 +72,17 @@ Muốn đổi font cho riêng một video thì thêm `"fontRoles": {"R2": {"stac
 
 | Nội dung câu | Mẫu nên dùng |
 |---|---|
-| Con số, giá tiền ("chỉ từ 500 triệu", "100 tỷ") | CK-14, CK-15, CK-01 |
-| Tên dự án, địa danh, tiện ích | CK-11, CK-12, CK-20 |
+| Con số, giá tiền ("chỉ từ 500 triệu", "100 tỷ") | CK-14, CK-15, CK-25, CK-27, CK-01 |
+| Phần trăm, tiến độ, thanh toán ("khởi công 90%") | CK-29 |
+| Thu nhập, dòng tiền ("sinh tiền mỗi tháng") | CK-24, CK-26 |
+| Tên dự án, địa danh, tiện ích | CK-11, CK-12, CK-20, CK-28 |
+| Xếp hạng, "số 1", top | CK-22 |
 | So sánh / hai vế ("để ở thì tiện, cho thuê thì tốt") | CK-13 |
 | Xu hướng, cảm xúc mạnh ("tăng nhiệt", "hạng sang") | CK-16, CK-10 |
 | Liệt kê ("3 lý do", "3 dự án") | CK-17, CK-18, CK-02 |
-| Câu hook mở đầu | CK-01, CK-03, CK-05 |
+| Câu hook mở đầu | CK-30, CK-01, CK-03, CK-05 |
+| Câu hỏi với người xem | CK-23 |
+| Cơ hội, nhấn mạnh một từ | CK-21 |
 | Kêu gọi (lưu lại, follow, liên hệ) | CK-07, CK-19 |
 | Câu chuyển ý, triết lý | CK-04, CK-06, CK-08, CK-09 |
 
@@ -106,12 +111,14 @@ Muốn đổi font cho riêng một video thì thêm `"fontRoles": {"R2": {"stac
 
 Đổi kiểu chữ vào cho một lớp: `"anims": {"hero": "A07"}`. Đổi thuộc tính bất kỳ của một lớp: `"layers": {"hero": {"rot": -5, "fill": "p2"}}`.
 
-## 6. 20 mẫu cụm (`presets/templates.json`)
+## 6. 30 mẫu cụm (`presets/templates.json`)
 
 - **Dòng A:** CK-01 số khổng lồ xếp chồng · CK-02 bậc thang · CK-03 kẹp giữa · CK-04 dẫn + script · CK-05 sans đậm + script đè · CK-06 serif + từ rải · CK-07 kêu gọi script đuôi lượn · CK-08 script đầu dòng + dòng đậm · CK-09 serif đè chéo sans · CK-10 script đổi màu + bậc thang.
 - **Dòng B:** CK-11 script + in hoa + dòng giãn chữ · CK-12 in hoa + script màu cắt chéo · CK-13 hai dòng nóng–lạnh · CK-14 số + chữ nền viền rỗng + nhãn + icon · CK-15 chữ chính + icon neon · CK-16 chữ chính + nét gạch lượn + nhãn · CK-17 số khổng lồ + danh sách thanh · CK-18 tiêu đề + ô số · CK-19 kêu gọi liên hệ · CK-20 chữ lồng ảnh.
+- **Dòng B (bổ sung):** CK-21 chữ cái đầu khổng lồ · CK-22 số nền + in hoa + script · CK-23 câu hỏi sans 3 tầng · CK-24 chữ chính kẹp icon hai bên · CK-25 số trong hộp bóng · CK-26 chữ chính + hàng icon tròn · CK-27 số + serif đè dưới · CK-28 tiêu đề tối giản 2 dòng · CK-29 % khổng lồ lệch góc · CK-30 câu hook nhiều tầng.
+- **Biến thể:** CK-14 có slot `ghost` để đặt chữ nền riêng (vd `"ghost": "$$$"`), bỏ trống thì lặp lại chữ chính · CK-16 đổi nét bằng `"layers": {"swoosh3": {"shape": "bar"}}` (bar = vạch thẳng; còn có arc, under, brush, wave) · CK-24 dùng `icon` và `icon2` cho hai bên · CK-26 đổi số icon bằng `"layers": {"iconrow2": {"count": 5}}`.
 
-Mỗi mẫu có trường `example` liệt kê các slot cần điền. Slot nào bỏ trống thì lớp đó tự bị bỏ qua. Ví dụ đủ 20 mẫu nằm ở `examples/all_templates.json`.
+Mỗi mẫu có trường `example` liệt kê các slot cần điền. Slot nào bỏ trống thì lớp đó tự bị bỏ qua. Ví dụ: `examples/all_templates.json` (CK-01..CK-20) và `examples/new_templates.json` (CK-21..CK-30 cùng các biến thể).
 
 Icon có sẵn: money, key, house, pin, bank, coin, chart, fire, star, phone, calendar, check, clock, arrowup, heart, gift, flagvn (sticker cờ).
 

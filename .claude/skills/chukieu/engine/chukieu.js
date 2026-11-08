@@ -194,9 +194,29 @@
     L.glowColor = c.glow; L.inner = box; L.el.appendChild(box);
     L.measure = () => { L.w = sz; L.h = sz; };
   }
+  function buildIconRow(L, name, cl) {
+    // hàng icon trong huy hiệu tròn (vd 3 đồng xu dưới "ĐẦU TƯ BĐS")
+    const def = L.def, sz = def.size * BASE; L.fs = sz; L.pad = { x: 0, y: 0 };
+    const n = def.count || 3, bg = color(def.bg || 'p1', cl);
+    const row = document.createElement('div');
+    Object.assign(row.style, { display: 'flex', alignItems: 'center', gap: (def.gap || 0.06) * BASE + 'px' });
+    const body = window.CK_ICONS[name] || window.CK_ICONS.coin;
+    L.parts = [];
+    for (let i = 0; i < n; i++) {
+      const big = n % 2 === 1 && i === (n - 1) / 2 ? 1.25 : 1, d = sz * big;
+      const b = document.createElement('div');
+      Object.assign(b.style, { width: d + 'px', height: d + 'px', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center',
+        background: bg.stops ? `radial-gradient(circle at 35% 30%, ${bg.stops[0].split(' ')[0]}, ${bg.stops[Math.min(2, bg.stops.length - 1)].split(' ')[0]} 70%)` : bg.solid,
+        boxShadow: `inset 0 ${0.06 * d}px ${0.1 * d}px rgba(255,255,255,0.5), inset 0 -${0.06 * d}px ${0.1 * d}px rgba(0,0,0,0.3)` });
+      b.innerHTML = `<svg viewBox="0 0 24 24" width="62%" height="62%" fill="none" stroke="${def.color || '#FFFFFF'}" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round">${body}</svg>`;
+      row.appendChild(b); L.parts.push(b);
+    }
+    L.inner = row; L.el.appendChild(row);
+    L.measure = () => { L.w = row.offsetWidth; L.h = row.offsetHeight; };
+  }
   const SWOOSH = {
     arc: 'M2,36 C30,40 66,30 98,4', under: 'M2,18 C25,34 70,34 98,12',
-    brush: 'M2,30 C35,22 62,22 98,8', wave: 'M2,24 C20,4 40,40 60,20 S90,10 98,14'
+    brush: 'M2,30 C35,22 62,22 98,8', bar: 'M2,22 L98,22', wave: 'M2,24 C20,4 40,40 60,20 S90,10 98,14'
   };
   function buildSwoosh(L, _t, cl) {
     const def = L.def; L.fs = def.size * BASE; L.pad = { x: 0, y: 0 };
@@ -247,7 +267,8 @@
       const def = Object.assign({}, d0, overrides[id] || {});
       if (c.anims && c.anims[id]) def.anim = c.anims[id];
       let content = def.slot ? texts[def.slot] : null;
-      if (type === 'icon') content = texts.icon || c.icon || def.icon;
+      if ((content === undefined || content === null || content === '') && def.fallback) content = texts[def.fallback];
+      if (type === 'icon' || type === 'iconrow') content = texts[def.slot] || texts.icon || c.icon || def.icon;
       if (type === 'swoosh') content = 'x';
       if (content === undefined || content === null || content === '') return;
       if (typeof content === 'string') content = content.normalize('NFC');
@@ -257,9 +278,9 @@
       const isWhite = !def.fill || def.fill === 'white';
       L.glow = def.glow !== undefined ? def.glow : (def.fill === 'grey' ? 0 : isWhite ? 0.45 : (style === 'A' ? 0.7 : 0.95));
       L.glowColor = def.fill === 'grey' ? null : color(def.fill === 'img' ? 'p1' : (def.fill || 'white'), cl).glow;
-      ({ text: buildText, ghost: buildText, pill: buildPill, bars: buildBars, tiles: buildTiles, icon: buildIcon, swoosh: buildSwoosh, spread: buildSpread }[type] || buildText)(L, content, cl);
+      ({ text: buildText, ghost: buildText, pill: buildPill, bars: buildBars, tiles: buildTiles, icon: buildIcon, iconrow: buildIconRow, swoosh: buildSwoosh, spread: buildSpread }[type] || buildText)(L, content, cl);
       if (type === 'ghost') L.glow = 0;
-      if (type === 'pill' || type === 'bars' || type === 'tiles') { L.glow = def.glow !== undefined ? def.glow : 0.6; L.glowColor = color(def.bg || 'p1', cl).glow; }
+      if (type === 'pill' || type === 'bars' || type === 'tiles' || type === 'iconrow') { L.glow = def.glow !== undefined ? def.glow : 0.6; L.glowColor = color(def.bg || 'p1', cl).glow; }
       L.filter = newFilter();
       L.phase = hash(idx * 31 + i) * 6.28;
       cl.layers.push(L);
@@ -359,7 +380,7 @@
   }
   function partAnims(L, lt) {
     const d = L.def, name = d.anim, parts = L.parts; if (!parts) return;
-    if (L.type === 'bars' || L.type === 'tiles') {
+    if (L.type === 'bars' || L.type === 'tiles' || L.type === 'iconrow') {
       parts.forEach((p, i) => {
         const l = lt - i * (d.per || 0.1), q = clamp(l / 0.28);
         p.style.opacity = clamp(l / 0.06); p.style.transform = `scale(${Math.max(0, E.outBack(q))})`;

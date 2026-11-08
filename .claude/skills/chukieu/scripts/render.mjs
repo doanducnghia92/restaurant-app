@@ -125,6 +125,7 @@ if (args.board) {
   const cw = Math.round(360 * W / 1080), chh = Math.round(cw * H / W);
   const crop = args.full ? '' : `crop=iw:ih*0.62:0:ih*0.1,`;
   execSync(`ffmpeg -v error -y -framerate 1 -i "${dir}/b_%03d.png" -vf "${crop}scale=${cw}:-2,drawbox=c=0x333333:t=1,tile=${cols}x${rows}" -frames:v 1 "${path.resolve(args.board)}"`);
+  if (args.boarddir) { fs.mkdirSync(path.resolve(args.boarddir), { recursive: true }); fs.readdirSync(dir).forEach(f => fs.copyFileSync(path.join(dir, f), path.join(path.resolve(args.boarddir), f))); }
   console.log('Đã lưu bảng', args.board); await done(); process.exit(0);
 }
 

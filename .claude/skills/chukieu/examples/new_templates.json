@@ -148,6 +148,17 @@
      "width": 1.0
     }
    }
+  },
+  {
+   "id": "CK-31",
+   "template": "CK-31",
+   "t_in": 36.3,
+   "t_out": 39.1,
+   "texts": {
+    "hero": "VIEW SÔNG",
+    "badge": "Tầm nhìn đắt giá",
+    "icon": "money"
+   }
   }
  ]
 }

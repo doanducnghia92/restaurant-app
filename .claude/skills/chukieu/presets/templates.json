@@ -600,8 +600,8 @@
    },
    {
     "slot": "sub",
-    "role": "R4",
-    "size": 0.75,
+    "role": "R8",
+    "size": 0.56,
     "fill": "p2",
     "glow": 1.0,
     "rot": -8,
@@ -609,8 +609,8 @@
      "hero",
      "bc",
      "tl",
-     -0.3,
-     -0.5
+     -0.25,
+     -0.38
     ],
     "anim": "A03"
    }
@@ -1232,16 +1232,16 @@
    },
    {
     "slot": "sub",
-    "role": "R4",
-    "size": 0.85,
+    "role": "R8",
+    "size": 0.6,
     "fill": "white",
     "rot": -6,
     "at": [
      "hero",
      "bl",
      "tl",
-     0.12,
-     -0.32
+     0.2,
+     -0.22
     ],
     "anim": "A03"
    }
@@ -1321,7 +1321,7 @@
    {
     "slot": "sub",
     "role": "R4",
-    "size": 0.7,
+    "size": 0.58,
     "fill": "white",
     "rot": -8,
     "at": [
@@ -1706,6 +1706,61 @@
     ],
     "anim": "A06",
     "split": "word"
+   }
+  ]
+ },
+ "CK-31": {
+  "style": "B",
+  "name": "Serif La Mã + nhãn + icon",
+  "example": {
+   "hero": "VIEW SÔNG",
+   "badge": "Tầm nhìn đắt giá",
+   "icon": "money"
+  },
+  "palette": "cyan",
+  "palette2": "toxic",
+  "layers": [
+   {
+    "slot": "hero",
+    "role": "R7",
+    "size": 0.8,
+    "fill": "p1",
+    "anim": "A12"
+   },
+   {
+    "type": "pill",
+    "slot": "badge",
+    "role": "R1",
+    "size": 0.22,
+    "weight": 700,
+    "radius": 0.3,
+    "bg": "p1",
+    "color": "#FFFFFF",
+    "at": [
+     "hero",
+     "br",
+     "tr",
+     0.0,
+     0.04
+    ],
+    "anim": "A10",
+    "delay": 0.1
+   },
+   {
+    "type": "icon",
+    "slot": "icon",
+    "size": 0.55,
+    "color": "p2",
+    "rot": -14,
+    "at": [
+     "hero",
+     "bl",
+     "tl",
+     0.18,
+     -0.12
+    ],
+    "anim": "A11",
+    "delay": 0.15
    }
   ]
  }

@@ -33,12 +33,11 @@
       "weight": 950
     },
     "R4": {
-      "desc": "Script chữ ký mảnh — chữ dẫn chéo",
+      "desc": "Script chữ ký mảnh — chữ dẫn chéo (Luôn, Chỉ từ, Khởi công)",
       "stack": [
-        "UTM Alexander",
-        "SVN-Holiday",
-        "Holiday",
+        "iCiel Brittany Signature",
         "Brittany Signature",
+        "SVN-Brittany Signature",
         "Ephesis"
       ],
       "weight": 400
@@ -47,7 +46,6 @@
       "desc": "Script trang trí đuôi lượn — chữ chính dòng A",
       "stack": [
         "SVN-Great Vibes",
-        "UTM Azkia",
         "Great Vibes",
         "Pinyon Script"
       ],
@@ -61,6 +59,34 @@
       ],
       "weight": 700,
       "italic": true
+    },
+    "R7": {
+      "desc": "Serif in hoa La Mã — VIEW SÔNG, tên dự án sang trọng",
+      "stack": [
+        "UTM Trajan Pro Bold",
+        "DVN Trajan",
+        "Trajan Pro",
+        "Playfair Display"
+      ],
+      "weight": 400
+    },
+    "R8": {
+      "desc": "Script nét cọ dày — Suối tiên, Đáng sống, Sài gòn",
+      "stack": [
+        "SVN-Holiday",
+        "Holiday",
+        "Great Vibes"
+      ],
+      "weight": 400
+    },
+    "R9": {
+      "desc": "Sans nhân văn đậm — câu phụ đậm (bất cứ lúc nào, Thanh toán đủ)",
+      "stack": [
+        "UTM Alexander",
+        "SVN-Gilroy",
+        "Be Vietnam Pro"
+      ],
+      "weight": 400
     }
   },
   "free": [

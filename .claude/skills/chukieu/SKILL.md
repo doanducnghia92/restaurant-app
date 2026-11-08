@@ -1,6 +1,6 @@
 ---
 name: chukieu
-description: Dựng cụm typo (chữ kiểu) động cho video dọc 9:16 TikTok/Reels/Shorts — cụm 3–4 lớp phối font (in hoa hẹp, sans tròn đậm, script chữ ký, script đuôi lượn, serif nghiêng), gradient kim loại/neon phát sáng, icon neon, nhãn bo tròn, nét gạch lượn, chữ nền viền rỗng, 14 kiểu chữ vào khớp từng từ lời thoại. Hai dòng phong cách — A "neon thanh lịch" và B "kim loại sôi động" — với 30 mẫu cụm CK-01..CK-30. Xuất lớp chữ nền trong suốt (MOV ProRes 4444 / WebM) hoặc ghép thẳng vào video. Dùng khi người dùng gọi chukieu, cần chữ kiểu / typo / text động cho video, hoặc khi một skill edit khác (nghia-edit, andy-edit…) cần lớp chữ.
+description: Dựng cụm typo (chữ kiểu) động cho video dọc 9:16 TikTok/Reels/Shorts — cụm 3–4 lớp phối font (in hoa hẹp, sans tròn đậm, script chữ ký, script đuôi lượn, serif nghiêng), gradient kim loại/neon phát sáng, icon neon, nhãn bo tròn, nét gạch lượn, chữ nền viền rỗng, 14 kiểu chữ vào khớp từng từ lời thoại. Hai dòng phong cách — A "neon thanh lịch" và B "kim loại sôi động" — với 31 mẫu cụm CK-01..CK-31. Xuất lớp chữ nền trong suốt (MOV ProRes 4444 / WebM) hoặc ghép thẳng vào video. Dùng khi người dùng gọi chukieu, cần chữ kiểu / typo / text động cho video, hoặc khi một skill edit khác (nghia-edit, andy-edit…) cần lớp chữ.
 ---
 
 # chukieu — cụm typo động
@@ -35,16 +35,21 @@ Skill này **chỉ làm lớp chữ**. Nó được thiết kế để chạy ch
 
 **Quy tắc vị trí:** các lớp đè lên nhau 15–35%; script nghiêng −8° đến −15°, chữ in hoa luôn thẳng; icon xoay ±15° và đè khoảng 20% lên góc chữ chính; bố cục lệch, không căn giữa đều.
 
-## 2. Font — 6 vai trò (`fonts/fonts.json`)
+## 2. Font — 9 vai trò (`fonts/fonts.json`)
 
 | Vai trò | Dùng cho | Font dự phòng có sẵn (OFL, có tiếng Việt) |
 |---|---|---|
-| R1 sans gọn | chữ dẫn, chữ phụ, nhãn | Be Vietnam Pro |
-| R2 in hoa hẹp đậm | chữ chính dòng B | Anton |
-| R3 sans tròn rất đậm | chữ chính, số, VIRAL | Montserrat Black |
-| R4 script chữ ký mảnh | chữ dẫn chéo (Luôn, Chỉ từ) | Ephesis |
+| R1 sans gọn | chữ dẫn, chữ phụ, nhãn | Be Vietnam Pro (font người dùng: SVN-Gilroy) |
+| R2 in hoa hẹp đậm | chữ chính dòng B | Anton (font người dùng: UTM Bebas) |
+| R3 sans tròn rất đậm | chữ chính, số, VIRAL | Montserrat Black (font người dùng: SVN-Gilroy Black) |
+| R4 script chữ ký mảnh | chữ dẫn chéo (Luôn, Chỉ từ) | Ephesis (font người dùng: iCiel Brittany Signature) |
 | R5 script đuôi lượn | chữ chính dòng A (Lưu lại, Viral) | Great Vibes, Pinyon Script |
 | R6 serif nghiêng | hành trình, tư duy, thu hút hơn | Playfair Display Italic |
+| R7 serif in hoa La Mã | VIEW SÔNG, tên dự án sang trọng (CK-31) | font người dùng: UTM Trajan Pro Bold / DVN Trajan |
+| R8 script nét cọ dày | Suối tiên, Đáng sống (CK-12, CK-22) | font người dùng: SVN-Holiday |
+| R9 sans nhân văn đậm | câu phụ đậm (bất cứ lúc nào, Thanh toán đủ) | font người dùng: UTM Alexander |
+
+**Font người dùng đã cài (không commit, chỉ nằm trong `fonts/user/`):** SVN-Gilroy (20 độ đậm), UTM Bebas, iCiel Brittany Signature, SVN-Holiday, UTM Alexander, UTM Trajan Pro Bold, DVN Trajan. Thiếu file nào thì vai trò đó tự dùng font dự phòng.
 
 **Dùng font của người dùng:** mỗi vai trò là một danh sách font, font đầu tiên tìm thấy sẽ được dùng. Có hai cách:
 - Khi skill chạy trên PC, Chromium tự dùng font đã cài trong máy theo tên. Chỉ cần sửa tên ở đầu `stack` cho đúng tên font trong máy (ví dụ `"UTM Bebas"`, `"SVN-Gilroy"`).
@@ -75,7 +80,7 @@ Muốn đổi font cho riêng một video thì thêm `"fontRoles": {"R2": {"stac
 | Con số, giá tiền ("chỉ từ 500 triệu", "100 tỷ") | CK-14, CK-15, CK-25, CK-27, CK-01 |
 | Phần trăm, tiến độ, thanh toán ("khởi công 90%") | CK-29 |
 | Thu nhập, dòng tiền ("sinh tiền mỗi tháng") | CK-24, CK-26 |
-| Tên dự án, địa danh, tiện ích | CK-11, CK-12, CK-20, CK-28 |
+| Tên dự án, địa danh, tiện ích | CK-11, CK-12, CK-20, CK-28, CK-31 |
 | Xếp hạng, "số 1", top | CK-22 |
 | So sánh / hai vế ("để ở thì tiện, cho thuê thì tốt") | CK-13 |
 | Xu hướng, cảm xúc mạnh ("tăng nhiệt", "hạng sang") | CK-16, CK-10 |
@@ -111,11 +116,11 @@ Muốn đổi font cho riêng một video thì thêm `"fontRoles": {"R2": {"stac
 
 Đổi kiểu chữ vào cho một lớp: `"anims": {"hero": "A07"}`. Đổi thuộc tính bất kỳ của một lớp: `"layers": {"hero": {"rot": -5, "fill": "p2"}}`.
 
-## 6. 30 mẫu cụm (`presets/templates.json`)
+## 6. 31 mẫu cụm (`presets/templates.json`)
 
 - **Dòng A:** CK-01 số khổng lồ xếp chồng · CK-02 bậc thang · CK-03 kẹp giữa · CK-04 dẫn + script · CK-05 sans đậm + script đè · CK-06 serif + từ rải · CK-07 kêu gọi script đuôi lượn · CK-08 script đầu dòng + dòng đậm · CK-09 serif đè chéo sans · CK-10 script đổi màu + bậc thang.
 - **Dòng B:** CK-11 script + in hoa + dòng giãn chữ · CK-12 in hoa + script màu cắt chéo · CK-13 hai dòng nóng–lạnh · CK-14 số + chữ nền viền rỗng + nhãn + icon · CK-15 chữ chính + icon neon · CK-16 chữ chính + nét gạch lượn + nhãn · CK-17 số khổng lồ + danh sách thanh · CK-18 tiêu đề + ô số · CK-19 kêu gọi liên hệ · CK-20 chữ lồng ảnh.
-- **Dòng B (bổ sung):** CK-21 chữ cái đầu khổng lồ · CK-22 số nền + in hoa + script · CK-23 câu hỏi sans 3 tầng · CK-24 chữ chính kẹp icon hai bên · CK-25 số trong hộp bóng · CK-26 chữ chính + hàng icon tròn · CK-27 số + serif đè dưới · CK-28 tiêu đề tối giản 2 dòng · CK-29 % khổng lồ lệch góc · CK-30 câu hook nhiều tầng.
+- **Dòng B (bổ sung):** CK-21 chữ cái đầu khổng lồ · CK-22 số nền + in hoa + script · CK-23 câu hỏi sans 3 tầng · CK-24 chữ chính kẹp icon hai bên · CK-25 số trong hộp bóng · CK-26 chữ chính + hàng icon tròn · CK-27 số + serif đè dưới · CK-28 tiêu đề tối giản 2 dòng · CK-29 % khổng lồ lệch góc · CK-30 câu hook nhiều tầng · CK-31 serif La Mã + nhãn + icon (VIEW SÔNG).
 - **Biến thể:** CK-14 có slot `ghost` để đặt chữ nền riêng (vd `"ghost": "$$$"`), bỏ trống thì lặp lại chữ chính · CK-16 đổi nét bằng `"layers": {"swoosh3": {"shape": "bar"}}` (bar = vạch thẳng; còn có arc, under, brush, wave) · CK-24 dùng `icon` và `icon2` cho hai bên · CK-26 đổi số icon bằng `"layers": {"iconrow2": {"count": 5}}`.
 
 Mỗi mẫu có trường `example` liệt kê các slot cần điền. Slot nào bỏ trống thì lớp đó tự bị bỏ qua. Ví dụ: `examples/all_templates.json` (CK-01..CK-20) và `examples/new_templates.json` (CK-21..CK-30 cùng các biến thể).

@@ -1,0 +1,28 @@
+{
+  "_note": "stops = gradient dọc trên→dưới. glow = màu phát sáng. Dòng B: gradient kim loại 3–4 điểm có dải sáng. Dòng A: neon dịu 2 điểm.",
+  "neutral": {
+    "white": { "solid": "#FFFFFF", "glow": "#FFFFFF" },
+    "grey":  { "solid": "#8A8A8A", "glow": "#000000" },
+    "dark":  { "solid": "#141414", "glow": "#000000" }
+  },
+  "B": {
+    "fire":   { "stops": ["#FFF3A0 0%", "#FFC23A 38%", "#FF7A1A 62%", "#E0441B 100%"], "glow": "#FF6A10", "solid": "#FF8A1F" },
+    "ice":    { "stops": ["#F2FDFF 0%", "#7BE6FF 35%", "#2FA8FF 62%", "#1B5BFF 100%"], "glow": "#1E90FF", "solid": "#2FA8FF" },
+    "chrome": { "stops": ["#FFFFFF 0%", "#E4E8EC 40%", "#7D8792 52%", "#C9CFD6 75%", "#FFFFFF 100%"], "glow": "#BFD4FF", "solid": "#D9DEE3" },
+    "gold":   { "stops": ["#FFF8C9 0%", "#FFE066 35%", "#F5B400 62%", "#B07A00 100%"], "glow": "#FFB000", "solid": "#F5C431" },
+    "toxic":  { "stops": ["#FBFFA8 0%", "#C8FF3A 35%", "#4CF03A 65%", "#0FA84A 100%"], "glow": "#5CFF2A", "solid": "#6CFF3A" },
+    "royal":  { "stops": ["#FBD9FF 0%", "#D58BFF 35%", "#A54DFF 62%", "#6A1BD8 100%"], "glow": "#B04DFF", "solid": "#B04DFF" },
+    "rose":   { "stops": ["#FFD0DF 0%", "#FF7FA6 35%", "#FF2D6F 62%", "#B8124F 100%"], "glow": "#FF2D6F", "solid": "#FF2D6F" },
+    "copper": { "stops": ["#FFE2C4 0%", "#F2A66B 40%", "#B5592A 65%", "#7A3418 100%"], "glow": "#E07A3A", "solid": "#D9773C" },
+    "cyan":   { "stops": ["#E6FFFF 0%", "#5CF6F0 40%", "#11C9D6 70%", "#0A8FA8 100%"], "glow": "#19E6E6", "solid": "#19E6E6" }
+  },
+  "A": {
+    "blue":   { "stops": ["#BFEAFF 0%", "#6CC4FF 45%", "#2E8BFF 100%"], "glow": "#2E8BFF", "solid": "#4FA8FF" },
+    "gold":   { "stops": ["#FFE58A 0%", "#F5B800 100%"], "glow": "#F5A800", "solid": "#F5B800" },
+    "mint":   { "stops": ["#C8FFF6 0%", "#6FF0DF 45%", "#1F9E92 100%"], "glow": "#2BD9C5", "solid": "#3FD9C8" },
+    "cyan":   { "stops": ["#D9FFFF 0%", "#19E6E6 100%"], "glow": "#19E6E6", "solid": "#19E6E6" },
+    "violet": { "stops": ["#E3C2FF 0%", "#B26BFF 45%", "#7B2FF7 100%"], "glow": "#8A3BFF", "solid": "#9B4DFF" },
+    "lime":   { "stops": ["#F2FF8A 0%", "#7CF03A 45%", "#22B83A 100%"], "glow": "#3DDC3D", "solid": "#4FE04F" },
+    "lemon":  { "stops": ["#FFF6A8 0%", "#E8C420 100%"], "glow": "#E8B800", "solid": "#E8C420" }
+  }
+}
